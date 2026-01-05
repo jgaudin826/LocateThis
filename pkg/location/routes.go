@@ -20,7 +20,7 @@ func Routes(configuration *config.Config) chi.Router {
 	router := chi.NewRouter()
 	router.Post("/locations", LocationsConfig.PostLocationHandler)
 	router.Get("/locations", LocationsConfig.GetAllLocationHandler)
-	router.Get("/locations/{id}", locationsConfig.GetLocationByIDHandler)
+	router.Get("/locations/{id}", LocationsConfig.GetLocationByIDHandler)
 	router.Put("/locations/{id}", LocationsConfig.PutLocationHandler)
 	router.Delete("/locations/{id}", LocationsConfig.DeleteLocationHandler)
 	return router
