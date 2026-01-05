@@ -3,6 +3,7 @@ package location
 import (
 	"fmt"
 	"locate-this/config"
+	"locate-this/pkg/models"
 	"net/http"
 	"strconv"
 

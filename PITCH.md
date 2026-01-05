@@ -35,7 +35,8 @@ Users:
 - /login
 - /refresh
 
-- 
+- GET /users/{id}/locations
+- GET /users/{id}/groups
 
 Locations:
 - POST /locations
@@ -44,6 +45,8 @@ Locations:
 - PUT /locations/{id}
 - DELETE /locations/{id}
 
+- GET /locations/{id}/groups
+
 Groups:
 - POST /groups
 - GET /groups
@@ -51,10 +54,12 @@ Groups:
 - PUT /groups/{id}
 - DELETE /groups/{id}
 
+--- 
 - POST /groups/{id}/users ({"user_id" : id})
 - GET /groups/{id}/users
 - DELETE /groups/{id}/users/{id}
 
+---
 - POST /groups/{id}/locations ({"location_id" : id})
 - GET /groups/{id}/locations
 - PUT /groups/{id}/locations/{id} 
