@@ -35,14 +35,14 @@ func (config *LocationConfig) PostLocationHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	locationEntry := &dbmodel.LocationEntry{Name: req.Name, Age: req.Age, Breed: req.Breed, Weight: req.Weight}
+	locationEntry := &dbmodel.LocationEntry{Name: req.Name, Latitude: req.Latitude, Longitude: req.Longitude}
 	res, err := config.LocationEntryRepository.Create(locationEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to create location"})
 		return
 	}
 
-	locationResponse := &models.LocationResponse{ID: res.ID, Name: res.Name, Age: res.Age, Breed: res.Breed, Weight: res.Weight}
+	locationResponse := &models.LocationResponse{ID: res.ID, Name: res.Name, Latitude: res.Latitude, Longitude: res.Longitude}
 	render.JSON(w, r, locationResponse)
 }
 
@@ -63,11 +63,10 @@ func (config *LocationConfig) GetAllLocationHandler(w http.ResponseWriter, r *ht
 	locationsResponse := make([]models.LocationResponse, 0)
 	for _, location := range entries {
 		locationsResponse = append(locationsResponse, models.LocationResponse{
-			ID:     location.ID,
-			Name:   location.Name,
-			Age:    location.Age,
-			Breed:  location.Breed,
-			Weight: location.Weight,
+			ID:        location.ID,
+			Name:      location.Name,
+			Latitude:  location.Latitude,
+			Longitude: location.Longitude,
 		})
 	}
 
@@ -92,7 +91,7 @@ func (config *LocationConfig) GetLocationByIDHandler(w http.ResponseWriter, r *h
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve location"})
 		return
 	}
-	locationResponse := &models.LocationResponse{ID: entry.ID, Name: entry.Name, Age: entry.Age, Breed: entry.Breed, Weight: entry.Weight}
+	locationResponse := &models.LocationResponse{ID: entry.ID, Name: entry.Name, Latitude: entry.Latitude, Longitude: entry.Longitude}
 	render.JSON(w, r, locationResponse)
 }
 
@@ -117,14 +116,14 @@ func (config *LocationConfig) PutLocationHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	locationEntry := &dbmodel.LocationEntry{Name: req.Name, Age: req.Age, Breed: req.Breed, Weight: req.Weight}
-	updated, err := config.LocationEntryRepository.Update(id, locationEntry)
+	locationEntry := &dbmodel.LocationEntry{Name: req.Name, Latitude: req.Latitude, Longitude: req.Longitude}
+	updated, err := config.LocationEntryRepository.Update(locationEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to update location"})
 		return
 	}
 
-	locationResponse := &models.LocationResponse{ID: uint(id), Name: updated.Name, Age: updated.Age, Breed: updated.Breed, Weight: updated.Weight}
+	locationResponse := &models.LocationResponse{ID: uint(id), Name: updated.Name, Latitude: updated.Latitude, Longitude: updated.Longitude}
 	render.JSON(w, r, locationResponse)
 }
 
@@ -141,7 +140,11 @@ func (config *LocationConfig) DeleteLocationHandler(w http.ResponseWriter, r *ht
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	err = config.LocationEntryRepository.Delete(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	err = config.LocationEntryRepository.Delete(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to delete location"})
 		return

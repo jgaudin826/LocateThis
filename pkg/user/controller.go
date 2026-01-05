@@ -141,7 +141,11 @@ func (config *UserConfig) DeleteUserHandler(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	err = config.UserEntryRepository.Delete(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	err = config.UserEntryRepository.Delete(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to delete user"})
 		return
@@ -220,7 +224,11 @@ func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	locations, err := config.UserEntryRepository.FindLocationsForUser(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	locations, err := config.UserEntryRepository.FindLocationsForUser(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
 		return

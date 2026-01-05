@@ -6,10 +6,10 @@ import (
 )
 
 type LocationRequest struct {
-	Name      string `json:"name"`
-	Latitude  int    `json:"latitude"`
-	Longitude int    `json:"longitude"`
-	UserID    string `json:"user_id"`
+	Name      string  `json:"name"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	UserID    string  `json:"user_id"`
 }
 
 func (a *LocationRequest) Bind(r *http.Request) error {
@@ -20,9 +20,9 @@ func (a *LocationRequest) Bind(r *http.Request) error {
 }
 
 type LocationResponse struct {
-	ID        uint   `json:"location_id"`
-	Name      string `json:"name"`
-	Latitude  int    `json:"latitude"`
-	Longitude int    `json:"longitude"`
-	UserID    string `json:"user_id"`
+	ID        uint    `json:"location_id"`
+	Name      string  `json:"name"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	UserID    string  `json:"user_id"`
 }
