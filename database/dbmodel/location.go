@@ -4,10 +4,11 @@ import "gorm.io/gorm"
 
 type Location struct {
 	gorm.Model
-	ID_User   User   `gorm:"foreignKey:CatID;constraint:OnDelete:CASCADE;" json:"id_user"`
-	Latitude  string `json:"latitude"`
-	Longitude string `json:"longitude"`
-	Name      string `json:"name"`
+	ID_User   User     `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;" json:"id_user"`
+	Latitude  string   `json:"latitude"`
+	Longitude string   `json:"longitude"`
+	Name      string   `json:"name"`
+	Groups    []*Group `gorm:"many2many:group_locations;constraint:OnDelete:CASCADE;" json:"groups"`
 }
 
 type LocationRepository interface {
