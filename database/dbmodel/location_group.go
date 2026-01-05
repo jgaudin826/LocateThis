@@ -2,14 +2,15 @@ package dbmodel
 
 import "gorm.io/gorm"
 
-type GroupLocation struct {
+type GroupLocationEntry struct {
 	GroupID              uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
 	LocationID           uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
 	IsVisibleCoordinates bool `gorm:"default:true"`
 }
 
 type LocationGroupRepository interface {
-	Create(entry *GroupLocation) (*GroupLocation, error)
+	Create(entry *GroupLocationEntry) (*GroupLocationEntry, error)
+	Update(entry *GroupLocationEntry) (*GroupLocationEntry, error)
 	Delete(groupID, locationID uint) error
 }
 type locationGroupRepository struct {
@@ -19,14 +20,14 @@ type locationGroupRepository struct {
 func NewLocationGroupRepository(db *gorm.DB) LocationGroupRepository {
 	return &locationGroupRepository{db: db}
 }
-func (r *locationGroupRepository) Create(entry *GroupLocation) (*GroupLocation, error) {
+func (r *locationGroupRepository) Create(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
 	if err := r.db.Create(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (r *locationGroupRepository) Update(entry *GroupLocation) (*GroupLocation, error) {
+func (r *locationGroupRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
 	if err := r.db.Save(entry).Error; err != nil {
 		return nil, err
 	}
@@ -34,5 +35,5 @@ func (r *locationGroupRepository) Update(entry *GroupLocation) (*GroupLocation, 
 }
 
 func (r *locationGroupRepository) Delete(groupID, locationID uint) error {
-	return r.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocation{}).Error
+	return r.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocationEntry{}).Error
 }
