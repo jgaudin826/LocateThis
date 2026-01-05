@@ -10,6 +10,7 @@ type GroupLocationEntry struct {
 
 type LocationGroupRepository interface {
 	Create(entry *GroupLocationEntry) (*GroupLocationEntry, error)
+	FindAll() (*GroupLocationEntry, error)
 	Update(entry *GroupLocationEntry) (*GroupLocationEntry, error)
 	Delete(groupID, locationID uint) error
 }
@@ -25,6 +26,14 @@ func (locationGroupRepository *locationGroupRepository) Create(entry *GroupLocat
 		return nil, err
 	}
 	return entry, nil
+}
+
+func (locationGroupRepository *locationGroupRepository) FindAll() (*GroupLocationEntry, error) {
+	var groupLocation GroupLocationEntry
+	if err := locationGroupRepository.db.First(&groupLocation).Error; err != nil {
+		return nil, err
+	}
+	return &groupLocation, nil
 }
 
 func (locationGroupRepository *locationGroupRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {

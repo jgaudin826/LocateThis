@@ -12,7 +12,6 @@ type Config struct {
 	GroupEntryRepository         dbmodel.GroupRepository
 	UserEntryRepository          dbmodel.UserRepository
 	LocationEntryRepository      dbmodel.LocationRepository
-	LocationGroupEntryRepository dbmodel.LocationGroupRepository
 }
 
 func New() (*Config, error) {
@@ -31,7 +30,6 @@ func New() (*Config, error) {
 	config.GroupEntryRepository = dbmodel.NewGroupRepository(databaseSession)
 	config.UserEntryRepository = dbmodel.NewUserRepository(databaseSession)
 	config.LocationEntryRepository = dbmodel.NewLocationRepository(databaseSession)
-	config.LocationGroupEntryRepository = dbmodel.NewLocationGroupRepository(databaseSession)
 
 	return &config, nil
 }

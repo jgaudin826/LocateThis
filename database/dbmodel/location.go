@@ -15,6 +15,7 @@ type LocationRepository interface {
 	Create(entry *LocationEntry) (*LocationEntry, error)
 	FindAll() ([]LocationEntry, error)
 	FindById(id uint) (*LocationEntry, error)
+	FindGroupsForLocation(id uint) ([]GroupEntry, error)
 	Update(entry *LocationEntry, id uint) (*LocationEntry, error)
 	Delete(id uint) error
 }
@@ -51,9 +52,13 @@ func (locationRepository *locationRepository) FindById(id uint) (*LocationEntry,
 }
 
 func (locationRepository *locationRepository) FindGroupsForLocation(id uint) ([]GroupEntry, error) {
-	var groups []GroupEntry
-	if err := locationRepository.db.Where("id_location = ?", id).Find(&groups).Error; err != nil {
+	var location LocationEntry
+	if err := locationRepository.db.Preload("Groups").First(&location, id).Error; err != nil {
 		return nil, err
+	}
+	groups := make([]GroupEntry, len(location.Groups))
+	for i, g := range location.Groups {
+		groups[i] = *g
 	}
 	return groups, nil
 }

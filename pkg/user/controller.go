@@ -268,23 +268,27 @@ func (config *UserConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 // @Success		200	{object}	models.TokenResponse
 // @Router			/refresh [post]
 func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request) {
-	authHeader := r.Header.Get("Authorization")
-	if authHeader == "" {
-		render.JSON(w, r, map[string]string{"error": "Missing token"})
-		return
-	}
+	id := authentication.GetUserFromContext(r.Context())
 
-	email, err := ParseToken(config.JWT_Secret, authHeader)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid token"})
-		return
-	}
+	// verifiaction que l'email n'est pas deja utilisé
+	user, err := config.UserRepository.FindByEmail(id)
+    if err != nil {
+        render.JSON(w, r, map[string]string{"error": "error there is no user with this email"})
+        return
+    }
 
-	newToken, err := GenerateToken(config.JWT_Secret, email)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-		return
-	}
+	token, err := authentication.GenerateToken("demo_key", user.id)
+    if err != nil {
+        render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
+        return
+    }
 
-	render.JSON(w, r, models.TokenResponse{Token: newToken})
+    refrsehToken, err := authentication.GenerateRefreshToken("demo_key_refresh", user.id)
+    if err != nil {
+        render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
+        return
+    }
+
+    render.JSON(w, r, map[string]string{"token": token, "refresh_token": refrsehToken})
+    return
 }

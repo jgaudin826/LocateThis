@@ -28,10 +28,17 @@ func Migrate(db *gorm.DB) {
 		&dbmodel.UserEntry{},
 		&dbmodel.LocationEntry{},
 		&dbmodel.GroupEntry{},
-		&dbmodel.GroupLocationEntry{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
+	}
+	err = db.SetupJoinTable(&dbmodel.GroupEntry{}, "Users", &dbmodel.GroupUserEntry{})
+	if err != nil {
+		log.Fatal("Failed to setup join table for Group and Users:", err)
+	}
+	err = db.SetupJoinTable(&dbmodel.GroupEntry{}, "Locations", &dbmodel.GroupLocationEntry{})
+	if err != nil {
+		log.Fatal("Failed to setup join table for Group and Locations:", err)
 	}
 	log.Println("Database migrated successfully")
 }

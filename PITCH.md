@@ -57,7 +57,6 @@ Groups:
 ---
 - POST /groups/{id}/users ({"user_id" : id})            => ajoute un utilisateur a un groupe                                            page group => + user
 - GET /groups/{id}/users                                => recupère tous les utilisateurs d'un groupes                                  page groupe vers section utilisateurs
-- PUT /groups/{id}/users/{id}                           => modifie les acces utilisateur du groupes                                     secrtion utilisateur vision admin
 - DELETE /groups/{id}/users/{id}                        => supprime un utilisateur d'un groupe                                          part d'un groupe/ban du groupe vision admin
 
 ---
