@@ -2,10 +2,9 @@ package groups
 
 import (
 	"locate-this/config"
-	"locate-this/pkg/authentication"
 
 	"github.com/go-chi/chi/v5"
-) 
+)
 
 /*
 Groups:
@@ -21,7 +20,7 @@ Groups:
 
 - POST /groups/{id}/locations ({"location_id" : id})
 - GET /groups/{id}/locations
-- PUT /groups/{id}/locations/{id} 
+- PUT /groups/{id}/locations/{id}
 - DELETE /groups/{id}/locations/{id}
 */
 
@@ -29,11 +28,11 @@ func Routes(configuration *config.Config) chi.Router {
     GroupsConfig := New(configuration)
     router := chi.NewRouter()  
     router.Group(func(r chi.Router) {
-    	router.Post("/groups", GroupsConfig.)
-    	router.Get("/groups", GroupsConfig.) 
-    	router.Get("/groups/{id}", GroupsConfig.)
-    	router.Put("/groups/{id}", GroupsConfig.) 
-    	router.Delete("/groups/{id}", GroupsConfig.) 
+    	router.Post("/groups", GroupsConfig.PostGroupHandler)
+    	router.Get("/groups", GroupsConfig.GetAllGroupHandler) 
+    	router.Get("/groups/{id}", GroupsConfig.GetGroupByIDHandler)
+    	router.Put("/groups/{id}", GroupsConfig.PutGroupHandler) 
+    	router.Delete("/groups/{id}", GroupsConfig.DeleteGroupHandler) 
     })
     router.Group(func(r chi.Router) {
     	router.Post("/groups/{id}/users", GroupsConfig.)

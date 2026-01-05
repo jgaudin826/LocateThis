@@ -2,10 +2,9 @@ package location
 
 import (
 	"locate-this/config"
-	"locate-this/pkg/authentication"
 
 	"github.com/go-chi/chi/v5"
-) 
+)
 
 /*
 Locations:
@@ -17,12 +16,12 @@ Locations:
 */
 
 func Routes(configuration *config.Config) chi.Router {
-    LocationsConfig := New(configuration)
-    router := chi.NewRouter() 
-    router.Post("/locations", LocationsConfig.)
-    router.Get("/locations", LocationsConfig.) 
-    router.Get("/locations/{id}", locationsConfig.) 
-    router.Put("/locations/{id}", LocationsConfig.) 
-    router.Delete("/locations/{id}", LocationsConfig.) 
-	return router 
+	LocationsConfig := New(configuration)
+	router := chi.NewRouter()
+	router.Post("/locations", LocationsConfig.PostLocationHandler)
+	router.Get("/locations", LocationsConfig.GetAllLocationHandler)
+	router.Get("/locations/{id}", LocationsConfig.GetLocationByIDHandler)
+	router.Put("/locations/{id}", LocationsConfig.PutLocationHandler)
+	router.Delete("/locations/{id}", LocationsConfig.DeleteLocationHandler)
+	return router
 }

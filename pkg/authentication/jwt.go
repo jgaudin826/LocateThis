@@ -1,6 +1,5 @@
 package authentication
 
-
 import (
 	"strings"
 	"time"
