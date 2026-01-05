@@ -4,9 +4,10 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Pseudo   string `json:"pseudo"`
+	Email    string   `json:"email"`
+	Password string   `json:"password"`
+	Pseudo   string   `json:"pseudo"`
+	Groups   []*Group `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"groups"`
 }
 
 type UserRepository interface {

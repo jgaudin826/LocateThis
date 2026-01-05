@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type Group struct {
 	gorm.Model
-	Name  string `json:"name"`
-	Users []User `gorm:"many2many:group_users;" json:"users"`
+	Name  string  `json:"name"`
+	Users []*User `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"users"`
 }
 
 type GroupRepository interface {
