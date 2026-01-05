@@ -13,7 +13,7 @@ type GroupEntry struct {
 type GroupRepository interface {
 	Create(entry *GroupEntry) (*GroupEntry, error)
 	FindById(id uint) (*GroupEntry, error)
-	Update(entry *GroupEntry) (*GroupEntry, error)
+	Update(entry *GroupEntry, id uint) (*GroupEntry, error)
 	Delete(id uint) error
 	FindAll() ([]GroupEntry, error)
 }
@@ -26,40 +26,39 @@ func NewGroupRepository(db *gorm.DB) GroupRepository {
 	return &groupRepository{db: db}
 }
 
-func (r *groupRepository) Create(entry *GroupEntry) (*GroupEntry, error) {
-	if err := r.db.Create(entry).Error; err != nil {
+func (groupRepository *groupRepository) Create(entry *GroupEntry) (*GroupEntry, error) {
+	if err := groupRepository.db.Create(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (r *groupRepository) FindAll() ([]GroupEntry, error) {
+func (groupRepository *groupRepository) FindAll() ([]GroupEntry, error) {
 	var groups []GroupEntry
-	if err := r.db.Find(&groups).Error; err != nil {
+	if err := groupRepository.db.Find(&groups).Error; err != nil {
 		return nil, err
 	}
 	return groups, nil
 }
 
-func (r *groupRepository) FindById(id uint) (*GroupEntry, error) {
+func (groupRepository *groupRepository) FindById(id uint) (*GroupEntry, error) {
 	var group GroupEntry
-	if err := r.db.First(&group, id).Error; err != nil {
+	if err := groupRepository.db.First(&group, id).Error; err != nil {
 		return nil, err
 	}
 	return &group, nil
 }
 
-func (r *groupRepository) Update(entry *GroupEntry) (*GroupEntry, error) {
-	if err := r.db.Save(entry).Error; err != nil {
+func (groupRepository *groupRepository) Update(entry *GroupEntry, id uint) (*GroupEntry, error) {
+	if err := groupRepository.db.Model(&GroupEntry{}).Where("id = ?", id).Updates(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (r *groupRepository) Delete(id uint) error {
-	if err := r.db.Delete(&GroupEntry{}, id).Error; err != nil {
+func (groupRepository *groupRepository) Delete(id uint) error {
+	if err := groupRepository.db.Delete(&GroupEntry{}, id).Error; err != nil {
 		return err
 	}
 	return nil
 }
-
