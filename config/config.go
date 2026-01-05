@@ -8,11 +8,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type Constants struct {
+}
+
 type Config struct {
 	GroupEntryRepository         dbmodel.GroupRepository
 	UserEntryRepository          dbmodel.UserRepository
 	LocationEntryRepository      dbmodel.LocationRepository
 	LocationGroupEntryRepository dbmodel.LocationGroupRepository
+	// Constants
+	SecretJWT     string
+	SecretRefreshJWT string
 }
 
 func New() (*Config, error) {
@@ -32,6 +38,9 @@ func New() (*Config, error) {
 	config.UserEntryRepository = dbmodel.NewUserRepository(databaseSession)
 	config.LocationEntryRepository = dbmodel.NewLocationRepository(databaseSession)
 	config.LocationGroupEntryRepository = dbmodel.NewLocationGroupRepository(databaseSession)
+
+	config.SecretJWT = "HeXIVX"
+	config.SecretRefreshJWT = "XVIXeH"
 
 	return &config, nil
 }
