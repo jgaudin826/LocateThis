@@ -12,8 +12,8 @@ type GroupEntry struct {
 
 type GroupRepository interface {
 	Create(entry *GroupEntry) (*GroupEntry, error)
-	FindById(id uint) (*GroupEntry, error)
 	FindAll() ([]GroupEntry, error)
+	FindById(id uint) (*GroupEntry, error)
 	FindLocationsForGroup(id uint) ([]LocationEntry, error)
 	FindUsersForGroup(id uint) ([]UserEntry, error)
 	Update(entry *GroupEntry, id uint) (*GroupEntry, error)
