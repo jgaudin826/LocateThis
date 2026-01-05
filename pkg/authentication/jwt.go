@@ -1,6 +1,5 @@
 package authentication
 
-
 import (
 	"strings"
 	"time"
@@ -11,7 +10,7 @@ import (
 func GenerateToken(secret, email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"exp": time.Now().Add(time.Hour * 2).Unix(),
+		"exp":   time.Now().Add(time.Hour * 2).Unix(),
 	})
 
 	return token.SignedString([]byte(secret))
@@ -20,7 +19,7 @@ func GenerateToken(secret, email string) (string, error) {
 func GenerateRefreshToken(secret, email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"exp": time.Now().Add(time.Hour * 3).Unix(),
+		"exp":   time.Now().Add(time.Hour * 3).Unix(),
 	})
 
 	return token.SignedString([]byte(secret))
