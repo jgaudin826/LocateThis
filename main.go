@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"locate-this/config"
 	"locate-this/pkg/authentication"
+	"locate-this/pkg/groups"
+	"locate-this/pkg/location"
+	"locate-this/pkg/user"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -16,6 +19,9 @@ func Routes(configuration *config.Config) *chi.Mux {
 	// Routeurs
 	router.Group(func(r chi.Router) {
     	r.Use(authentication.AuthMiddleware("demo_key"))
+		r.Mount("/api", groups.Routes(configuration))
+		r.Mount("/api", location.Routes(configuration))
+		r.Mount("/api", user.Routes(configuration))
 	})
 
     return router
