@@ -84,12 +84,27 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	entry, err := config.GroupEntryRepository.FindByID(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	entry, err := config.GroupEntryRepository.FindById(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve group"})
 		return
 	}
-	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Users: entry.Users, Locations: entry.Locations}
+
+	var users []models.UserResponse
+	for _, user := range entry.Users {
+		users = append(users, models.UserResponse{ID: user.ID, Email: user.Email, Pseudo: user.Pseudo})
+	}
+
+	var locations []models.LocationResponse
+	for _, location := range entry.Locations {
+		locations = append(locations, models.LocationResponse{ID: location.ID, Name: location.Name, Latitude: location.Latitude, Longitude: location.Longitude, UserID: string(location.User.ID)})
+	}
+
+	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Users: users, Locations: locations}
 	render.JSON(w, r, groupResponse)
 }
 

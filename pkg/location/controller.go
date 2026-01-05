@@ -86,7 +86,11 @@ func (config *LocationConfig) GetLocationByIDHandler(w http.ResponseWriter, r *h
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	entry, err := config.LocationEntryRepository.FindByID(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	entry, err := config.LocationEntryRepository.FindById(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve location"})
 		return
