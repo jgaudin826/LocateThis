@@ -24,8 +24,6 @@ Tables:
 - location-group
 
 Routes:
-/login
-/refresh
 
 Users:
 - POST /users
@@ -33,6 +31,9 @@ Users:
 - GET /users/{id}
 - PUT /users/{id}
 - DELETE /users/{id}
+
+- /login
+- /refresh
 
 - 
 
