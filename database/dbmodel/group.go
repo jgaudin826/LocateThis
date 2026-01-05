@@ -13,9 +13,11 @@ type GroupEntry struct {
 type GroupRepository interface {
 	Create(entry *GroupEntry) (*GroupEntry, error)
 	FindById(id uint) (*GroupEntry, error)
+	FindAll() ([]GroupEntry, error)
+	FindLocationsForGroup(id uint) ([]LocationEntry, error)
+	FindUsersForGroup(id uint) ([]UserEntry, error)
 	Update(entry *GroupEntry, id uint) (*GroupEntry, error)
 	Delete(id uint) error
-	FindAll() ([]GroupEntry, error)
 }
 
 type groupRepository struct {
@@ -47,6 +49,30 @@ func (groupRepository *groupRepository) FindById(id uint) (*GroupEntry, error) {
 		return nil, err
 	}
 	return &group, nil
+}
+
+func (groupRepository *groupRepository) FindLocationsForGroup(id uint) ([]LocationEntry, error) {
+	var group GroupEntry
+	if err := groupRepository.db.Preload("Locations").First(&group, id).Error; err != nil {
+		return nil, err
+	}
+	locations := make([]LocationEntry, len(group.Locations))
+	for i, l := range group.Locations {
+		locations[i] = *l
+	}
+	return locations, nil
+}
+
+func (groupRepository *groupRepository) FindUsersForGroup(id uint) ([]UserEntry, error) {
+	var group GroupEntry
+	if err := groupRepository.db.Preload("Users").First(&group, id).Error; err != nil {
+		return nil, err
+	}
+	users := make([]UserEntry, len(group.Users))
+	for i, u := range group.Users {
+		users[i] = *u
+	}
+	return users, nil
 }
 
 func (groupRepository *groupRepository) Update(entry *GroupEntry, id uint) (*GroupEntry, error) {
