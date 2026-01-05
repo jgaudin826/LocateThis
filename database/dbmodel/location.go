@@ -15,7 +15,7 @@ type LocationRepository interface {
 	Create(entry *LocationEntry) (*LocationEntry, error)
 	FindAll() ([]LocationEntry, error)
 	FindById(id uint) (*LocationEntry, error)
-	Update(entry *LocationEntry) (*LocationEntry, error)
+	Update(entry *LocationEntry, id uint) (*LocationEntry, error)
 	Delete(id uint) error
 }
 
@@ -50,8 +50,16 @@ func (locationRepository *locationRepository) FindById(id uint) (*LocationEntry,
 	return &location, nil
 }
 
-func (locationRepository *locationRepository) Update(entry *LocationEntry) (*LocationEntry, error) {
-	if err := locationRepository.db.Save(entry).Error; err != nil {
+func (locationRepository *locationRepository) FindGroupsForLocation(id uint) ([]GroupEntry, error) {
+	var groups []GroupEntry
+	if err := locationRepository.db.Where("id_location = ?", id).Find(&groups).Error; err != nil {
+		return nil, err
+	}
+	return groups, nil
+}
+
+func (locationRepository *locationRepository) Update(entry *LocationEntry, id uint) (*LocationEntry, error) {
+	if err := locationRepository.db.Model(&LocationEntry{}).Where("id = ?", id).Updates(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil

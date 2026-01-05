@@ -20,20 +20,20 @@ type locationGroupRepository struct {
 func NewLocationGroupRepository(db *gorm.DB) LocationGroupRepository {
 	return &locationGroupRepository{db: db}
 }
-func (r *locationGroupRepository) Create(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
-	if err := r.db.Create(entry).Error; err != nil {
+func (locationGroupRepository *locationGroupRepository) Create(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
+	if err := locationGroupRepository.db.Create(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (r *locationGroupRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
-	if err := r.db.Save(entry).Error; err != nil {
+func (locationGroupRepository *locationGroupRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
+	if err := locationGroupRepository.db.Save(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (r *locationGroupRepository) Delete(groupID, locationID uint) error {
-	return r.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocationEntry{}).Error
+func (locationGroupRepository *locationGroupRepository) Delete(groupID, locationID uint) error {
+	return locationGroupRepository.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocationEntry{}).Error
 }
