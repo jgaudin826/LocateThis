@@ -8,7 +8,7 @@ import (
 type UserRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Pseudo   string `json:"pseudo"`
+	Username string `json:"pseudo"`
 }
 
 func (a *UserRequest) Bind(r *http.Request) error {
@@ -16,14 +16,14 @@ func (a *UserRequest) Bind(r *http.Request) error {
 		return errors.New("email must not be null")
 	} else if a.Password == "" {
 		return errors.New("password must not be null")
-	} else if a.Pseudo == "" {
+	} else if a.Username == "" {
 		return errors.New("pseudo must not be null")
 	}
 	return nil
 }
 
 type UserResponse struct {
-	ID     uint   `json:"user_id"`
-	Email  string `json:"email"`
-	Pseudo string `json:"pseudo"`
+	ID       uint   `json:"user_id"`
+	Email    string `json:"email"`
+	Username string `json:"pseudo"`
 }

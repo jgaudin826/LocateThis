@@ -120,8 +120,13 @@ func (config *LocationConfig) PutLocationHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
 	locationEntry := &dbmodel.LocationEntry{Name: req.Name, Latitude: req.Latitude, Longitude: req.Longitude}
-	updated, err := config.LocationEntryRepository.Update(locationEntry)
+	updated, err := config.LocationEntryRepository.Update(locationEntry, uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to update location"})
 		return

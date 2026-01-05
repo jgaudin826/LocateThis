@@ -96,7 +96,7 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 
 	var users []models.UserResponse
 	for _, user := range entry.Users {
-		users = append(users, models.UserResponse{ID: user.ID, Email: user.Email, Pseudo: user.Pseudo})
+		users = append(users, models.UserResponse{ID: user.ID, Email: user.Email, Username: user.Username})
 	}
 
 	var locations []models.LocationResponse
@@ -129,8 +129,13 @@ func (config *GroupConfig) PutGroupHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
 	groupEntry := &dbmodel.GroupEntry{Name: req.Name}
-	updated, err := config.GroupEntryRepository.Update(groupEntry)
+	updated, err := config.GroupEntryRepository.Update(groupEntry, uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to update group"})
 		return

@@ -39,14 +39,14 @@ func (config *UserConfig) PostUserHandler(w http.ResponseWriter, r *http.Request
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	req.Password = string(hashedPassword)
 
-	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Pseudo: req.Pseudo}
+	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Username: req.Username}
 	res, err := config.UserEntryRepository.Create(userEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to create user"})
 		return
 	}
 
-	userResponse := &models.UserResponse{ID: res.ID, Email: res.Email, Pseudo: res.Pseudo}
+	userResponse := &models.UserResponse{ID: res.ID, Email: res.Email, Username: res.Username}
 	render.JSON(w, r, userResponse)
 }
 
@@ -67,9 +67,9 @@ func (config *UserConfig) GetAllUserHandler(w http.ResponseWriter, r *http.Reque
 	usersResponse := make([]models.UserResponse, 0)
 	for _, user := range entries {
 		usersResponse = append(usersResponse, models.UserResponse{
-			ID:     user.ID,
-			Email:  user.Email,
-			Pseudo: user.Pseudo,
+			ID:       user.ID,
+			Email:    user.Email,
+			Username: user.Username,
 		})
 	}
 
@@ -92,8 +92,42 @@ func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.R
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve user"})
 		return
 	}
-	userResponse := &models.UserResponse{ID: entry.ID, Email: entry.Email, Pseudo: entry.Pseudo}
+	userResponse := &models.UserResponse{ID: entry.ID, Email: entry.Email, Username: entry.Username}
 	render.JSON(w, r, userResponse)
+}
+
+func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	locations, err := config.UserEntryRepository.FindLocationsForUser(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
+		return
+	}
+	render.JSON(w, r, locations)
+}
+
+func (config *UserConfig) GetUserGroupsHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	groups, err := config.UserEntryRepository.FindGroupsForUser(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve groups"})
+		return
+	}
+	render.JSON(w, r, groups)
 }
 
 // @Summary		Update a user
@@ -117,14 +151,19 @@ func (config *UserConfig) PutUserHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Pseudo: req.Pseudo}
-	updated, err := config.UserEntryRepository.Update(id, userEntry)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
+	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Username: req.Username}
+	updated, err := config.UserEntryRepository.Update(userEntry, uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to update user"})
 		return
 	}
 
-	userResponse := &models.UserResponse{ID: uint(id), Email: updated.Email, Pseudo: updated.Pseudo}
+	userResponse := &models.UserResponse{ID: uint(id), Email: updated.Email, Username: updated.Username}
 	render.JSON(w, r, userResponse)
 }
 
@@ -217,38 +256,4 @@ func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	render.JSON(w, r, models.TokenResponse{Token: newToken})
-}
-
-func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		fmt.Println("Error during id convertion")
-	}
-	if id < 1 {
-		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
-		return
-	}
-	locations, err := config.UserEntryRepository.FindLocationsForUser(uint(id))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
-		return
-	}
-	render.JSON(w, r, locations)
-}
-
-func (config *UserConfig) GetUserGroupsHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		fmt.Println("Error during id convertion")
-	}
-	if id < 1 {
-		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
-		return
-	}
-	groups, err := config.UserEntryRepository.FindGroupsForUser(uint(id))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to retrieve groups"})
-		return
-	}
-	render.JSON(w, r, groups)
 }
