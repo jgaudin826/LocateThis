@@ -36,12 +36,12 @@ func Routes(configuration *config.Config) chi.Router {
     })
     router.Group(func(r chi.Router) {
     	router.Post("/groups/{id}/users", GroupsConfig.)
-    	router.Get("/groups/{id}/users", GroupsConfig.)
+    	router.Get("/groups/{id}/users", GroupsConfig.GetUsersForGroupHandler)
     	router.Delete("/groups/{id}/users/{id}", GroupsConfig.)
     })
     router.Group(func(r chi.Router) {
     	router.Post("/groups/{id}/locations", GroupsConfig.)
-    	router.Get("/groups/{id}/locations", GroupsConfig.) 
+    	router.Get("/groups/{id}/locations", GroupsConfig.GetLocationsForGroupHandler) 
     	router.Put("/groups/{id}/locations/{id} ", GroupsConfig.) 
     	router.Delete("/groups/{id}/locations/{id} ", GroupsConfig.) 
     })

@@ -23,5 +23,6 @@ func Routes(configuration *config.Config) chi.Router {
 	router.Get("/locations/{id}", LocationsConfig.GetLocationByIDHandler)
 	router.Put("/locations/{id}", LocationsConfig.PutLocationHandler)
 	router.Delete("/locations/{id}", LocationsConfig.DeleteLocationHandler)
+	router.Get("/locations/{id}/groups", LocationsConfig.GetGroupsForLocationHandler)
 	return router
 }

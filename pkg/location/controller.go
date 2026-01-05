@@ -160,3 +160,38 @@ func (config *LocationConfig) DeleteLocationHandler(w http.ResponseWriter, r *ht
 	}
 	render.JSON(w, r, "Succefully deleted entry")
 }
+
+// @Summary		Get groups for a location
+// @Description	Retrieve all groups that contain this location
+// @Tags			locations
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"Location ID"
+// @Success		200	{array}		models.GroupResponse
+// @Router			/locations/{id}/groups [get]
+func (config *LocationConfig) GetGroupsForLocationHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
+	groups, err := config.LocationEntryRepository.FindGroupsForLocation(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve groups"})
+		return
+	}
+
+	groupsResponse := make([]models.GroupResponse, 0)
+	for _, group := range groups {
+		groupsResponse = append(groupsResponse, models.GroupResponse{
+			ID:   group.ID,
+			Name: group.Name,
+		})
+	}
+
+	render.JSON(w, r, groupsResponse)
+}
