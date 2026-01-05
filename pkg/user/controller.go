@@ -241,7 +241,11 @@ func (config *UserConfig) GetUserGroupsHandler(w http.ResponseWriter, r *http.Re
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	groups, err := config.UserEntryRepository.FindGroupsForUser(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	groups, err := config.UserEntryRepository.FindGroupsForUser(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve groups"})
 		return
