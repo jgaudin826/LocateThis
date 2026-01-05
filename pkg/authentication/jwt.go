@@ -8,18 +8,18 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func GenerateToken(secret, email string) (string, error) {
+func GenerateToken(secret, id string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": email,
+		"id": id,
 		"exp": time.Now().Add(time.Hour * 2).Unix(),
 	})
 
 	return token.SignedString([]byte(secret))
 }
 
-func GenerateRefreshToken(secret, email string) (string, error) {
+func GenerateRefreshToken(secret, id string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": email,
+		"id": id,
 		"exp": time.Now().Add(time.Hour * 3).Unix(),
 	})
 
@@ -37,7 +37,7 @@ func ParseToken(secret, tokenString string) (string, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return claims["email"].(string), nil
+		return claims["id"].(string), nil
 	}
 	return "", err
 }
