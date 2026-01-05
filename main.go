@@ -4,12 +4,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"vet-clinic-api/config"
-	"vet-clinic-api/pkg/authentification"
-	"vet-clinic-api/pkg/user"
-	"vet-clinic-api/pkg/cat"
-	"vet-clinic-api/pkg/visit"
-	"vet-clinic-api/pkg/treatment"
+	"LocateThis/pkg/authentification"
 
 	"github.com/go-chi/chi/v5"
 )
