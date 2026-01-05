@@ -28,7 +28,6 @@ func Migrate(db *gorm.DB) {
 		&dbmodel.UserEntry{},
 		&dbmodel.LocationEntry{},
 		&dbmodel.GroupEntry{},
-		&dbmodel.GroupLocationEntry{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)

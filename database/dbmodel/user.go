@@ -78,9 +78,13 @@ func (userRepository *userRepository) FindLocationsForUser(id uint) ([]LocationE
 }
 
 func (userRepository *userRepository) FindGroupsForUser(id uint) ([]GroupEntry, error) {
-	var groups []GroupEntry
-	if err := userRepository.db.Where("id_user = ?", id).Find(&groups).Error; err != nil {
+	var user UserEntry
+	if err := userRepository.db.Preload("Groups").First(&user, id).Error; err != nil {
 		return nil, err
+	}
+	groups := make([]GroupEntry, len(user.Groups))
+	for i, g := range user.Groups {
+		groups[i] = *g
 	}
 	return groups, nil
 }
