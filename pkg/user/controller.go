@@ -214,3 +214,29 @@ func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 
 	render.JSON(w, r, models.TokenResponse{Token: newToken})
 }
+
+func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	locations, err := config.UserEntryRepository.FindLocationsForUser(id)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
+		return
+	}
+	render.JSON(w, r, locations)
+}
+
+func (config *UserConfig) GetUserGroupsHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	groups, err := config.UserEntryRepository.FindGroupsForUser(id)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve groups"})
+		return
+	}
+	render.JSON(w, r, groups)
+}
