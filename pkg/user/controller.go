@@ -1,10 +1,10 @@
 package user
 
 import (
-	"LocateThis/config"
-	"LocateThis/database/dbmodel"
-	"LocateThis/pkg/models"
 	"fmt"
+	"locate-this/config"
+	"locate-this/database/dbmodel"
+	"locate-this/pkg/models"
 	"net/http"
 	"strconv"
 

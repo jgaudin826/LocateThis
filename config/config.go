@@ -9,10 +9,10 @@ import (
 )
 
 type Config struct {
-	GroupRepository         dbmodel.GroupRepository
-	UserRepository          dbmodel.UserRepository
-	LocationRepository      dbmodel.LocationRepository
-	LocationGroupRepository dbmodel.LocationGroupRepository
+	GroupEntryRepository         dbmodel.GroupRepository
+	UserEntryRepository          dbmodel.UserRepository
+	LocationEntryRepository      dbmodel.LocationRepository
+	LocationGroupEntryRepository dbmodel.LocationGroupRepository
 }
 
 func New() (*Config, error) {
@@ -28,10 +28,10 @@ func New() (*Config, error) {
 	database.Migrate(databaseSession)
 
 	// Initialisation des repositories
-	config.GroupRepository = dbmodel.NewGroupRepository(databaseSession)
-	config.UserRepository = dbmodel.NewUserRepository(databaseSession)
-	config.LocationRepository = dbmodel.NewLocationRepository(databaseSession)
-	config.LocationGroupRepository = dbmodel.NewLocationGroupRepository(databaseSession)
-	
+	config.GroupEntryRepository = dbmodel.NewGroupRepository(databaseSession)
+	config.UserEntryRepository = dbmodel.NewUserRepository(databaseSession)
+	config.LocationEntryRepository = dbmodel.NewLocationRepository(databaseSession)
+	config.LocationGroupEntryRepository = dbmodel.NewLocationGroupRepository(databaseSession)
+
 	return &config, nil
 }
