@@ -2,6 +2,11 @@ package authentication
 
 import (
 	"context"
+	"locate-this/config"
+	"locate-this/database/dbmodel"
+    "strconv"
+	"locate-this/pkg/user"
+	"log"
 	"net/http"
 ) 
 
@@ -28,8 +33,16 @@ func AuthMiddleware(secret string) func(http.Handler) http.Handler {
 	}	
 }
 
-func GetUserFromContext(ctx context.Context) string {
+func GetUserFromContext(ctx context.Context) (*dbmodel.UserEntry, error) {
 	id, _ := ctx.Value("id").(string)
-	
-	return id
+
+	configuration, err := config.New()
+	if err != nil {
+		log.Panicln("Configuration error:", err)
+	}
+	UserConfig := user.New(configuration)
+
+	ID, _ := strconv.Atoi(id)
+
+	return UserConfig.UserEntryRepository.FindById(uint(ID))
 }
