@@ -76,6 +76,25 @@ func (config *UserConfig) GetAllUserHandler(w http.ResponseWriter, r *http.Reque
 	render.JSON(w, r, usersResponse)
 }
 
+func (config *UserConfig) GetUserByIDHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
+	entry, err := config.UserEntryRepository.FindById(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve user"})
+		return
+	}
+	userResponse := &models.UserResponse{ID: entry.ID, Email: entry.Email, Username: entry.Username}
+	render.JSON(w, r, userResponse)
+}
+
 // @Summary		Get user by ID
 // @Description	Retrieve a user by its ID
 // @Tags			users
@@ -88,6 +107,18 @@ func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.R
 	email := chi.URLParam(r, "email")
 
 	entry, err := config.UserEntryRepository.FindByEmail(email)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve user"})
+		return
+	}
+	userResponse := &models.UserResponse{ID: entry.ID, Email: entry.Email, Username: entry.Username}
+	render.JSON(w, r, userResponse)
+}
+
+func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *http.Request) {
+	username := chi.URLParam(r, "username")
+
+	entry, err := config.UserEntryRepository.FindByUsername(username)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve user"})
 		return
