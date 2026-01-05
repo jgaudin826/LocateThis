@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"go/constant"
 	"locate-this/config"
 	"locate-this/database/dbmodel"
 	"locate-this/pkg/models"
@@ -250,7 +251,7 @@ func (config *UserConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := GenerateToken(config.JWT_Secret, req.Email)
+	token, err := GenerateToken(config.SecretJWT, req.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
@@ -277,13 +278,13 @@ func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
         return
     }
 
-	token, err := authentication.GenerateToken("demo_key", user.id)
+	token, err := authentication.GenerateToken(config.SecretJWT, user.id)
     if err != nil {
         render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
         return
     }
 
-    refrsehToken, err := authentication.GenerateRefreshToken("demo_key_refresh", user.id)
+    refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, user.id)
     if err != nil {
         render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
         return
