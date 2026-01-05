@@ -12,9 +12,11 @@ type UserEntry struct {
 
 type UserRepository interface {
 	Create(entry *UserEntry) (*UserEntry, error)
+	FindAll() ([]UserEntry, error)
 	FindById(id uint) (*UserEntry, error)
 	FindByEmail(email string) (*UserEntry, error)
 	FindLocationsForUser(id uint) ([]LocationEntry, error)
+	FindGroupsForUser(id uint) ([]GroupEntry, error)
 	Update(entry *UserEntry) (*UserEntry, error)
 	Delete(id uint) error
 }
@@ -32,6 +34,14 @@ func (r *userRepository) Create(entry *UserEntry) (*UserEntry, error) {
 		return nil, err
 	}
 	return entry, nil
+}
+
+func (r *userRepository) FindAll() ([]UserEntry, error) {
+	var users []UserEntry
+	if err := r.db.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *userRepository) FindById(id uint) (*UserEntry, error) {
@@ -56,6 +66,14 @@ func (r *userRepository) FindLocationsForUser(id uint) ([]LocationEntry, error) 
 		return nil, err
 	}
 	return locations, nil
+}
+
+func (r *userRepository) FindGroupsForUser(id uint) ([]GroupEntry, error) {
+	var groups []GroupEntry
+	if err := r.db.Where("id_user = ?", id).Find(&groups).Error; err != nil {
+		return nil, err
+	}
+	return groups, nil
 }
 
 func (r *userRepository) Update(entry *UserEntry) (*UserEntry, error) {

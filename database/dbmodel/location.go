@@ -4,9 +4,9 @@ import "gorm.io/gorm"
 
 type LocationEntry struct {
 	gorm.Model
-	ID_User   UserEntry     `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;" json:"id_user"`
-	Latitude  string        `json:"latitude"`
-	Longitude string        `json:"longitude"`
+	User      UserEntry     `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;" json:"id_user"`
+	Latitude  float64       `json:"latitude"`
+	Longitude float64       `json:"longitude"`
 	Name      string        `json:"name"`
 	Groups    []*GroupEntry `gorm:"many2many:group_locations;constraint:OnDelete:CASCADE;" json:"groups"`
 }
