@@ -35,14 +35,14 @@ func (config *GroupConfig) PostGroupHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	groupEntry := &dbmodel.GroupEntry{Name: req.Name, Age: req.Age, Breed: req.Breed, Weight: req.Weight}
+	groupEntry := &dbmodel.GroupEntry{Name: req.Name}
 	res, err := config.GroupEntryRepository.Create(groupEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to create group"})
 		return
 	}
 
-	groupResponse := &models.GroupResponse{ID: res.ID, Name: res.Name, Age: res.Age, Breed: res.Breed, Weight: res.Weight}
+	groupResponse := &models.GroupResponse{ID: res.ID, Name: res.Name}
 	render.JSON(w, r, groupResponse)
 }
 
@@ -63,11 +63,8 @@ func (config *GroupConfig) GetAllGroupHandler(w http.ResponseWriter, r *http.Req
 	groupsResponse := make([]models.GroupResponse, 0)
 	for _, group := range entries {
 		groupsResponse = append(groupsResponse, models.GroupResponse{
-			ID:     group.ID,
-			Name:   group.Name,
-			Age:    group.Age,
-			Breed:  group.Breed,
-			Weight: group.Weight,
+			ID:   group.ID,
+			Name: group.Name,
 		})
 	}
 
@@ -92,7 +89,7 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 		render.JSON(w, r, map[string]string{"error": "Failed to retrieve group"})
 		return
 	}
-	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Age: entry.Age, Breed: entry.Breed, Weight: entry.Weight}
+	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Users: entry.Users, Locations: entry.Locations}
 	render.JSON(w, r, groupResponse)
 }
 
@@ -117,14 +114,14 @@ func (config *GroupConfig) PutGroupHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	groupEntry := &dbmodel.GroupEntry{Name: req.Name, Age: req.Age, Breed: req.Breed, Weight: req.Weight}
-	updated, err := config.GroupEntryRepository.Update(id, groupEntry)
+	groupEntry := &dbmodel.GroupEntry{Name: req.Name}
+	updated, err := config.GroupEntryRepository.Update(groupEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to update group"})
 		return
 	}
 
-	groupResponse := &models.GroupResponse{ID: uint(id), Name: updated.Name, Age: updated.Age, Breed: updated.Breed, Weight: updated.Weight}
+	groupResponse := &models.GroupResponse{ID: uint(id), Name: updated.Name}
 	render.JSON(w, r, groupResponse)
 }
 
@@ -141,7 +138,11 @@ func (config *GroupConfig) DeleteGroupHandler(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		fmt.Println("Error during id convertion")
 	}
-	err = config.GroupEntryRepository.Delete(id)
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+	err = config.GroupEntryRepository.Delete(uint(id))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to delete group"})
 		return
