@@ -60,6 +60,14 @@ func (r *userRepository) FindByEmail(email string) (*UserEntry, error) {
 	return &user, nil
 }
 
+func (r *userRepository) FindByPseudo(pseudo string) (*UserEntry, error) {
+	var user UserEntry
+	if err := r.db.Where("pseudo = ?", pseudo).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (r *userRepository) FindLocationsForUser(id uint) ([]LocationEntry, error) {
 	var locations []LocationEntry
 	if err := r.db.Where("id_user = ?", id).Find(&locations).Error; err != nil {

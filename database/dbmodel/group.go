@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 type GroupEntry struct {
 	gorm.Model
 	Name      string           `json:"name"`
+	Admin     UserEntry        `json:"admin_id" gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;"`
 	Users     []*UserEntry     `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"users"`
 	Locations []*LocationEntry `gorm:"many2many:group_locations;" json:"locations"`
 }
@@ -14,6 +15,7 @@ type GroupRepository interface {
 	FindById(id uint) (*GroupEntry, error)
 	Update(entry *GroupEntry) (*GroupEntry, error)
 	Delete(id uint) error
+	FindAll() ([]GroupEntry, error)
 }
 
 type groupRepository struct {
@@ -29,6 +31,14 @@ func (r *groupRepository) Create(entry *GroupEntry) (*GroupEntry, error) {
 		return nil, err
 	}
 	return entry, nil
+}
+
+func (r *groupRepository) FindAll() ([]GroupEntry, error) {
+	var groups []GroupEntry
+	if err := r.db.Find(&groups).Error; err != nil {
+		return nil, err
+	}
+	return groups, nil
 }
 
 func (r *groupRepository) FindById(id uint) (*GroupEntry, error) {
@@ -52,3 +62,4 @@ func (r *groupRepository) Delete(id uint) error {
 	}
 	return nil
 }
+
