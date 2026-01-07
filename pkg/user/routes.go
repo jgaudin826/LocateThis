@@ -24,8 +24,8 @@ func Routes(configuration *config.Config) chi.Router {
 	router.Get("/users/{id}", UserConfig.GetUserByEmailHandler)
 	router.Put("/users/{id}", UserConfig.PutUserHandler)
 	router.Delete("/users/{id}", UserConfig.DeleteUserHandler)
-	router.Get("/users/{id}/locations", UserConfig.GetUserLocationsHandler)
-	router.Get("/users/{id}/groups", UserConfig.GetUserGroupsHandler)
+	router.Get("/users/{id}/locations", UserConfig.GetLocationsForUserHandler)
+	router.Get("/users/{id}/groups", UserConfig.GetGroupsForUserHandler)
 	router.Group(func(r chi.Router) {
 		r.Use(authentication.AuthMiddleware("demo_key_refresh"))
 		r.Get("/login", UserConfig.LoginHandler)

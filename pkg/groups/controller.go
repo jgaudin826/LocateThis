@@ -108,6 +108,79 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 	render.JSON(w, r, groupResponse)
 }
 
+// @Summary		Get locations for a group
+// @Description	Retrieve all locations belonging to a group
+// @Tags			groups
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"Group ID"
+// @Success		200	{array}		models.LocationResponse
+// @Router			/groups/{id}/locations [get]
+func (config *GroupConfig) GetLocationsForGroupHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
+	locations, err := config.GroupEntryRepository.FindLocationsForGroup(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
+		return
+	}
+
+	locationsResponse := make([]models.LocationResponse, 0)
+	for _, location := range locations {
+		locationsResponse = append(locationsResponse, models.LocationResponse{
+			ID:        location.ID,
+			Name:      location.Name,
+			Latitude:  location.Latitude,
+			Longitude: location.Longitude,
+		})
+	}
+
+	render.JSON(w, r, locationsResponse)
+}
+
+// @Summary		Get users for a group
+// @Description	Retrieve all users belonging to a group
+// @Tags			groups
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"Group ID"
+// @Success		200	{array}		models.UserResponse
+// @Router			/groups/{id}/users [get]
+func (config *GroupConfig) GetUsersForGroupHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		fmt.Println("Error during id convertion")
+	}
+	if id < 1 {
+		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
+		return
+	}
+
+	users, err := config.GroupEntryRepository.FindUsersForGroup(uint(id))
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to retrieve users"})
+		return
+	}
+
+	usersResponse := make([]models.UserResponse, 0)
+	for _, user := range users {
+		usersResponse = append(usersResponse, models.UserResponse{
+			ID:       user.ID,
+			Email:    user.Email,
+			Username: user.Username,
+		})
+	}
+
+	render.JSON(w, r, usersResponse)
+}
+
 // @Summary		Update a group
 // @Description	Update an existing group entry
 // @Tags			groups
@@ -168,77 +241,4 @@ func (config *GroupConfig) DeleteGroupHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 	render.JSON(w, r, "Succefully deleted entry")
-}
-
-// @Summary		Get users for a group
-// @Description	Retrieve all users belonging to a group
-// @Tags			groups
-// @Accept			json
-// @Produce		json
-// @Param			id	path		int	true	"Group ID"
-// @Success		200	{array}		models.UserResponse
-// @Router			/groups/{id}/users [get]
-func (config *GroupConfig) GetUsersForGroupHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		fmt.Println("Error during id convertion")
-	}
-	if id < 1 {
-		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
-		return
-	}
-
-	users, err := config.GroupEntryRepository.FindUsersForGroup(uint(id))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to retrieve users"})
-		return
-	}
-
-	usersResponse := make([]models.UserResponse, 0)
-	for _, user := range users {
-		usersResponse = append(usersResponse, models.UserResponse{
-			ID:       user.ID,
-			Email:    user.Email,
-			Username: user.Username,
-		})
-	}
-
-	render.JSON(w, r, usersResponse)
-}
-
-// @Summary		Get locations for a group
-// @Description	Retrieve all locations belonging to a group
-// @Tags			groups
-// @Accept			json
-// @Produce		json
-// @Param			id	path		int	true	"Group ID"
-// @Success		200	{array}		models.LocationResponse
-// @Router			/groups/{id}/locations [get]
-func (config *GroupConfig) GetLocationsForGroupHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		fmt.Println("Error during id convertion")
-	}
-	if id < 1 {
-		render.JSON(w, r, map[string]string{"error": "id must be >= 1"})
-		return
-	}
-
-	locations, err := config.GroupEntryRepository.FindLocationsForGroup(uint(id))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to retrieve locations"})
-		return
-	}
-
-	locationsResponse := make([]models.LocationResponse, 0)
-	for _, location := range locations {
-		locationsResponse = append(locationsResponse, models.LocationResponse{
-			ID:        location.ID,
-			Name:      location.Name,
-			Latitude:  location.Latitude,
-			Longitude: location.Longitude,
-		})
-	}
-
-	render.JSON(w, r, locationsResponse)
 }

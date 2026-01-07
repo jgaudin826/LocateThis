@@ -2,9 +2,9 @@ package user
 
 import (
 	"fmt"
-	"go/constant"
 	"locate-this/config"
 	"locate-this/database/dbmodel"
+	"locate-this/pkg/authentication"
 	"locate-this/pkg/models"
 	"net/http"
 	"strconv"
@@ -128,7 +128,7 @@ func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *htt
 	render.JSON(w, r, userResponse)
 }
 
-func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http.Request) {
+func (config *UserConfig) GetLocationsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		fmt.Println("Error during id convertion")
@@ -145,7 +145,7 @@ func (config *UserConfig) GetUserLocationsHandler(w http.ResponseWriter, r *http
 	render.JSON(w, r, locations)
 }
 
-func (config *UserConfig) GetUserGroupsHandler(w http.ResponseWriter, r *http.Request) {
+func (config *UserConfig) GetGroupsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		fmt.Println("Error during id convertion")
@@ -273,23 +273,23 @@ func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 
 	// verifiaction que l'email n'est pas deja utilisé
 	user, err := config.UserRepository.FindByEmail(id)
-    if err != nil {
-        render.JSON(w, r, map[string]string{"error": "error there is no user with this email"})
-        return
-    }
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "error there is no user with this email"})
+		return
+	}
 
 	token, err := authentication.GenerateToken(config.SecretJWT, user.id)
-    if err != nil {
-        render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-        return
-    }
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
+		return
+	}
 
-    refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, user.id)
-    if err != nil {
-        render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-        return
-    }
+	refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, user.id)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
+		return
+	}
 
-    render.JSON(w, r, map[string]string{"token": token, "refresh_token": refrsehToken})
-    return
+	render.JSON(w, r, map[string]string{"token": token, "refresh_token": refrsehToken})
+	return
 }
