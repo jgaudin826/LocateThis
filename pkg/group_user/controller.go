@@ -24,10 +24,9 @@ func New(configuration *config.Config) *GroupUserConfig {
 // @Tags			groups
 // @Accept			json
 // @Produce		json
-// @Param			id		path		int						true	"Group ID"
-// @Param			request	body		models.AddUserRequest	true	"User ID"
-// @Success		200		{object}	models.UserResponse
-// @Router			/groups/{id}/users [post]
+// @Param			request	body		models.GroupUserRequest	true	"Group ID and User ID"
+// @Success		200		{object}	map[string]string
+// @Router			/groups/users [post]
 func (config *GroupUserConfig) PostUserToGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupUserRequest{}
 	if err := render.Bind(r, req); err != nil {
@@ -51,7 +50,7 @@ func (config *GroupUserConfig) PostUserToGroupHandler(w http.ResponseWriter, r *
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupUserResponse
-// @Router			/groups/users/all [get]
+// @Router			/groups/users [get]
 func (config *GroupUserConfig) GetAllGroupUserHandler(w http.ResponseWriter, r *http.Request) {
 	groupUsers, err := config.GroupUserEntryRepository.FindAll()
 	if err != nil {

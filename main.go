@@ -11,23 +11,26 @@ import (
 	"log"
 	"net/http"
 
+	_ "locate-this/docs"
+
 	"github.com/go-chi/chi/v5"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title Clinic API
-// @version 1.0
-// @description API for managing groups, users, and locations
-// @host localhost:8080
-// @BasePath /api/v1
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
+// @title			LocateThis API
+// @version			1.0
+// @description		API for managing groups, users, locations, and authentication
+// @host			localhost:8080
+// @BasePath		/api/v1
+// @securityDefinitions.apikey	BearerAuth
+// @in				header
+// @name			Authorization
 func Routes(configuration *config.Config) *chi.Mux {
 	router := chi.NewRouter()
 	router.Get("/swagger/*", httpSwagger.WrapHandler)
+
 	router.Mount("/api/v1/auth", authentication.Routes(configuration))
-	// Routeurs
+
 	router.Group(func(r chi.Router) {
 		r.Use(authentication.AuthMiddleware("demo_key"))
 		r.Mount("/api", group.Routes(configuration))
@@ -46,8 +49,11 @@ func main() {
 	if err != nil {
 		log.Panicln("Configuration error:", err)
 	}
+
 	// Initialisation des routes
 	router := Routes(configuration)
-	log.Println("Serving on :8080")
+
+	log.Println("Server running on http://localhost:8080")
+	log.Println("Swagger UI available at http://localhost:8080/swagger/index.html")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

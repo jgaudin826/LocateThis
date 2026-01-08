@@ -127,6 +127,14 @@ func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *htt
 	render.JSON(w, r, userResponse)
 }
 
+// @Summary		Get locations for a user
+// @Description	Retrieve all locations created by a user
+// @Tags			users
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"User ID"
+// @Success		200	{array}	models.LocationResponse
+// @Router			/users/{id}/locations [get]
 func (config *UserConfig) GetLocationsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -144,6 +152,14 @@ func (config *UserConfig) GetLocationsForUserHandler(w http.ResponseWriter, r *h
 	render.JSON(w, r, locations)
 }
 
+// @Summary		Get groups for a user
+// @Description	Retrieve all groups a user belongs to
+// @Tags			users
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"User ID"
+// @Success		200	{array}	models.GroupResponse
+// @Router			/users/{id}/groups [get]
 func (config *UserConfig) GetGroupsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

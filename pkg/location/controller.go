@@ -105,7 +105,7 @@ func (config *LocationConfig) GetLocationByIDHandler(w http.ResponseWriter, r *h
 // @Accept			json
 // @Produce		json
 // @Param			id	path		int	true	"Location ID"
-// @Success		200	{array}		models.GroupResponse
+// @Success		200	{array}	models.GroupResponse
 // @Router			/locations/{id}/groups [get]
 func (config *LocationConfig) GetGroupsForLocationHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -176,7 +176,7 @@ func (config *LocationConfig) PutLocationHandler(w http.ResponseWriter, r *http.
 // @Tags			locations
 // @Accept			json
 // @Produce		json
-// @Param			id	path		int		true	"Location ID"
+// @Param			id	path		int	true	"Location ID"
 // @Success		200	{string}	string	"Successfully deleted entry"
 // @Router			/locations/{id} [delete]
 func (config *LocationConfig) DeleteLocationHandler(w http.ResponseWriter, r *http.Request) {

@@ -113,12 +113,12 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 }
 
 // @Summary		Refresh token
-// @Description	Generate a new JWT token from an existing valid token
+// @Description	Generate a new JWT token from an existing valid refresh token
 // @Tags			authentication
 // @Accept			json
 // @Produce		json
-// @Security		Bearer
-// @Success		200	{object}	models.TokenResponse
+// @Param			request	body		models.TokenRequest	true	"Refresh token"
+// @Success		200		{object}	models.TokenResponse
 // @Router			/refresh [post]
 func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.TokenRequest{}

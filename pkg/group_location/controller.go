@@ -19,15 +19,14 @@ func New(configuration *config.Config) *GroupLocationConfig {
 	return &GroupLocationConfig{configuration}
 }
 
-// @Summary		Share location in group
-// @Description	Add a location to a group
+// @Summary		Add location to group
+// @Description	Share a location in a group
 // @Tags			groups
 // @Accept			json
 // @Produce		json
-// @Param			id		path		int							true	"Group ID"
-// @Param			request	body		models.AddLocationRequest	true	"Location ID and visibility"
-// @Success		200		{object}	models.LocationResponse
-// @Router			/groups/{id}/locations [post]
+// @Param			request	body		models.GroupLocationRequest	true	"Group ID, Location ID and visibility"
+// @Success		200		{object}	map[string]string
+// @Router			/groups/locations [post]
 func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupLocationRequest{}
 	if err := render.Bind(r, req); err != nil {
@@ -51,7 +50,7 @@ func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWri
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupLocationResponse
-// @Router			/groups/locations/all [get]
+// @Router			/groups/locations [get]
 func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWriter, r *http.Request) {
 	groupLocations, err := config.GroupLocationEntryRepository.FindAll()
 	if err != nil {
@@ -71,15 +70,15 @@ func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWri
 	render.JSON(w, r, groupLocationResponse)
 }
 
-// @Summary		Update location sharing in group
+// @Summary		Update location visibility in group
 // @Description	Update location visibility settings in a group
 // @Tags			groups
 // @Accept			json
 // @Produce		json
 // @Param			id			path		int							true	"Group ID"
 // @Param			locationID	path		int							true	"Location ID"
-// @Param			request		body		models.AddLocationRequest	true	"Updated visibility settings"
-// @Success		200			{object}	models.LocationResponse
+// @Param			request		body		models.GroupLocationRequest	true	"Updated visibility settings"
+// @Success		200			{object}	map[string]string
 // @Router			/groups/{id}/locations/{locationID} [put]
 func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))

@@ -223,7 +223,7 @@ func (config *GroupConfig) PutGroupHandler(w http.ResponseWriter, r *http.Reques
 // @Tags			groups
 // @Accept			json
 // @Produce		json
-// @Param			id	path		int		true	"Group ID"
+// @Param			id	path		int	true	"Group ID"
 // @Success		200	{string}	string	"Successfully deleted entry"
 // @Router			/groups/{id} [delete]
 func (config *GroupConfig) DeleteGroupHandler(w http.ResponseWriter, r *http.Request) {
