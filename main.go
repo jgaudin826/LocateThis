@@ -32,7 +32,7 @@ func Routes(configuration *config.Config) *chi.Mux {
 	router.Mount("/api/auth", authentication.Routes(configuration))
 
 	router.Group(func(r chi.Router) {
-		r.Use(authentication.AuthMiddleware("demo_key"))
+		r.Use(authentication.AuthMiddleware(configuration.SecretJWT))
 		r.Mount("/api/groups", group.Routes(configuration))
 		r.Mount("/api/group-location", group_location.Routes(configuration))
 		r.Mount("/api/group-user", group_user.Routes(configuration))

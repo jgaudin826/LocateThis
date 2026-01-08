@@ -27,6 +27,8 @@ func New(configuration *config.Config) *LocationConfig {
 // @Produce		json
 // @Param			request	body		models.LocationRequest	true	"Location data"
 // @Success		200		{object}	models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations [post]
 func (config *LocationConfig) PostLocationHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.LocationRequest{}
@@ -52,6 +54,8 @@ func (config *LocationConfig) PostLocationHandler(w http.ResponseWriter, r *http
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations [get]
 func (config *LocationConfig) GetAllLocationHandler(w http.ResponseWriter, r *http.Request) {
 	entries, err := config.LocationEntryRepository.FindAll()
@@ -80,6 +84,8 @@ func (config *LocationConfig) GetAllLocationHandler(w http.ResponseWriter, r *ht
 // @Produce		json
 // @Param			id	path		int	true	"Location ID"
 // @Success		200	{object}	models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations/{id} [get]
 func (config *LocationConfig) GetLocationByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -106,6 +112,8 @@ func (config *LocationConfig) GetLocationByIDHandler(w http.ResponseWriter, r *h
 // @Produce		json
 // @Param			id	path		int	true	"Location ID"
 // @Success		200	{array}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations/{id}/groups [get]
 func (config *LocationConfig) GetGroupsForLocationHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -142,6 +150,8 @@ func (config *LocationConfig) GetGroupsForLocationHandler(w http.ResponseWriter,
 // @Param			id		path		int					true	"Location ID"
 // @Param			request	body		models.LocationRequest	true	"Location data"
 // @Success		200		{object}	models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations/{id} [put]
 func (config *LocationConfig) PutLocationHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -178,6 +188,8 @@ func (config *LocationConfig) PutLocationHandler(w http.ResponseWriter, r *http.
 // @Produce		json
 // @Param			id	path		int	true	"Location ID"
 // @Success		200	{string}	string	"Successfully deleted entry"
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/locations/{id} [delete]
 func (config *LocationConfig) DeleteLocationHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))

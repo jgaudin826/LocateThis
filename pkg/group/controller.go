@@ -27,6 +27,8 @@ func New(configuration *config.Config) *GroupConfig {
 // @Produce		json
 // @Param			request	body		models.GroupRequest	true	"Group data"
 // @Success		200		{object}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups [post]
 func (config *GroupConfig) PostGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupRequest{}
@@ -52,6 +54,8 @@ func (config *GroupConfig) PostGroupHandler(w http.ResponseWriter, r *http.Reque
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups [get]
 func (config *GroupConfig) GetAllGroupHandler(w http.ResponseWriter, r *http.Request) {
 	entries, err := config.GroupEntryRepository.FindAll()
@@ -78,6 +82,8 @@ func (config *GroupConfig) GetAllGroupHandler(w http.ResponseWriter, r *http.Req
 // @Produce		json
 // @Param			id	path		int	true	"Group ID"
 // @Success		200	{object}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups/{id} [get]
 func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -101,7 +107,7 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 
 	var locations []models.LocationResponse
 	for _, location := range entry.Locations {
-		locations = append(locations, models.LocationResponse{ID: location.ID, Name: location.Name, Latitude: location.Latitude, Longitude: location.Longitude, UserID: string(location.User.ID)})
+		locations = append(locations, models.LocationResponse{ID: location.ID, Name: location.Name, Latitude: location.Latitude, Longitude: location.Longitude, UserID: strconv.Itoa(int(location.User.ID))})
 	}
 
 	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Users: users, Locations: locations}
@@ -115,6 +121,8 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 // @Produce		json
 // @Param			id	path		int	true	"Group ID"
 // @Success		200	{array}		models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups/{id}/locations [get]
 func (config *GroupConfig) GetLocationsForGroupHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -152,6 +160,8 @@ func (config *GroupConfig) GetLocationsForGroupHandler(w http.ResponseWriter, r 
 // @Produce		json
 // @Param			id	path		int	true	"Group ID"
 // @Success		200	{array}		models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups/{id}/users [get]
 func (config *GroupConfig) GetUsersForGroupHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -189,6 +199,8 @@ func (config *GroupConfig) GetUsersForGroupHandler(w http.ResponseWriter, r *htt
 // @Param			id		path		int					true	"Group ID"
 // @Param			request	body		models.GroupRequest	true	"Group data"
 // @Success		200		{object}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups/{id} [put]
 func (config *GroupConfig) PutGroupHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -225,6 +237,8 @@ func (config *GroupConfig) PutGroupHandler(w http.ResponseWriter, r *http.Reques
 // @Produce		json
 // @Param			id	path		int	true	"Group ID"
 // @Success		200	{string}	string	"Successfully deleted entry"
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/groups/{id} [delete]
 func (config *GroupConfig) DeleteGroupHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))

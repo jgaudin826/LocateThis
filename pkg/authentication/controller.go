@@ -1,7 +1,6 @@
 package authentication
 
 import (
-	"encoding/json"
 	"locate-this/config"
 	"locate-this/database/dbmodel"
 	"locate-this/pkg/models"
@@ -24,24 +23,24 @@ func New(configuration *config.Config) *AuthConfig {
 // @Tags			authentication
 // @Accept			json
 // @Produce		json
-// @Param			request	body		models.LoginRequest	true	"Login credentials"
+// @Param			request	body		models.UserRequest	true	"Login credentials"
 // @Success		200		{object}	models.TokenResponse
-// @Router			/login [post]
+// @Failure 400 {object} map[string]string
+// @Router			/auth/login [post]
 func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
-	req := &models.LoginRequest{}
+	req := &models.UserRequest{}
 	if err := render.Bind(r, req); err != nil {
 		render.JSON(w, r, map[string]string{"error": "Invalid request req"})
-		return
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid req", http.StatusBadRequest)
 		return
 	}
 
 	user, err := config.UserEntryRepository.FindByEmail(req.Email)
 	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid email or password"})
-		return
+		user, err = config.UserEntryRepository.FindByUsername(req.Username)
+		if err != nil {
+			render.JSON(w, r, map[string]string{"error": "Invalid email or password"})
+			return
+		}
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)) != nil {
@@ -63,6 +62,7 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	tokens := &models.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		TokenType:    "bearer",
 	}
 
 	render.JSON(w, r, tokens)
@@ -75,12 +75,22 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 // @Produce		json
 // @Param			request	body		models.UserRequest	true	"Register credentials"
 // @Success		200		{object}	models.TokenResponse
-// @Router			/register [post]
+// @Failure 400 {object} map[string]string
+// @Router			/auth/register [post]
 func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.UserRequest{}
 	if err := render.Bind(r, req); err != nil {
 		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
 		return
+	}
+
+	_, err := config.UserEntryRepository.FindByEmail(req.Email)
+	if err == nil {
+		_, err = config.UserEntryRepository.FindByUsername(req.Username)
+		if err == nil {
+			render.JSON(w, r, map[string]string{"error": " email or pseudo already in use"})
+			return
+		}
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -107,6 +117,7 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 	tokens := &models.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		TokenType:    "bearer",
 	}
 
 	render.JSON(w, r, tokens)
@@ -119,15 +130,12 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 // @Produce		json
 // @Param			request	body		models.TokenRequest	true	"Refresh token"
 // @Success		200		{object}	models.TokenResponse
-// @Router			/refresh [post]
+// @Failure 400 {object} map[string]string
+// @Router			/auth/refresh [post]
 func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.TokenRequest{}
 	if err := render.Bind(r, req); err != nil {
 		render.JSON(w, r, map[string]string{"error": "Invalid request req"})
-		return
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid req", http.StatusBadRequest)
 		return
 	}
 
@@ -156,6 +164,7 @@ func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 	tokens := &models.TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		TokenType:    "bearer",
 	}
 
 	render.JSON(w, r, tokens)

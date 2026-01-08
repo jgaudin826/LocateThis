@@ -76,13 +76,6 @@ definitions:
       user_id:
         type: string
     type: object
-  models.LoginRequest:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-    type: object
   models.TokenRequest:
     properties:
       refresh_token:
@@ -93,6 +86,8 @@ definitions:
       access_token:
         type: string
       refresh_token:
+        type: string
+      token_type:
         type: string
     type: object
   models.UserRequest:
@@ -120,6 +115,90 @@ info:
   title: LocateThis API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - authentication
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Generate a new JWT token from an existing valid refresh token
+      parameters:
+      - description: Refresh token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Refresh token
+      tags:
+      - authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user and return JWT tokens
+      parameters:
+      - description: Register credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User register
+      tags:
+      - authentication
   /group-location:
     get:
       consumes:
@@ -134,6 +213,14 @@ paths:
             items:
               $ref: '#/definitions/models.GroupLocationResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get all group-location associations
       tags:
       - group-location
@@ -157,6 +244,14 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Add location to group
       tags:
       - group-location
@@ -183,6 +278,14 @@ paths:
           description: Successfully removed location from group
           schema:
             type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Delete location from group
       tags:
       - group-location
@@ -216,6 +319,14 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Update location visibility in group
       tags:
       - group-location
@@ -233,6 +344,14 @@ paths:
             items:
               $ref: '#/definitions/models.GroupUserResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get all group-user associations
       tags:
       - group-user
@@ -256,6 +375,14 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Add user to group
       tags:
       - group-user
@@ -282,6 +409,14 @@ paths:
           description: Successfully removed user from group
           schema:
             type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Delete user from group
       tags:
       - group-user
@@ -299,6 +434,14 @@ paths:
             items:
               $ref: '#/definitions/models.GroupResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get all groups
       tags:
       - groups
@@ -320,6 +463,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.GroupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Create a new group
       tags:
       - groups
@@ -341,6 +492,14 @@ paths:
           description: Successfully deleted entry
           schema:
             type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Delete a group
       tags:
       - groups
@@ -361,6 +520,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.GroupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get group by ID
       tags:
       - groups
@@ -387,6 +554,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.GroupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Update a group
       tags:
       - groups
@@ -410,6 +585,14 @@ paths:
             items:
               $ref: '#/definitions/models.LocationResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get locations for a group
       tags:
       - groups
@@ -433,6 +616,14 @@ paths:
             items:
               $ref: '#/definitions/models.UserResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get users for a group
       tags:
       - groups
@@ -450,6 +641,14 @@ paths:
             items:
               $ref: '#/definitions/models.LocationResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get all locations
       tags:
       - locations
@@ -471,6 +670,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.LocationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Create a new location
       tags:
       - locations
@@ -492,6 +699,14 @@ paths:
           description: Successfully deleted entry
           schema:
             type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Delete a location
       tags:
       - locations
@@ -512,6 +727,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.LocationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get location by ID
       tags:
       - locations
@@ -538,6 +761,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.LocationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Update a location
       tags:
       - locations
@@ -561,75 +792,17 @@ paths:
             items:
               $ref: '#/definitions/models.GroupResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get groups for a location
       tags:
       - locations
-  /login:
-    post:
-      consumes:
-      - application/json
-      description: Authenticate user and return JWT token
-      parameters:
-      - description: Login credentials
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.TokenResponse'
-      summary: User login
-      tags:
-      - authentication
-  /refresh:
-    post:
-      consumes:
-      - application/json
-      description: Generate a new JWT token from an existing valid refresh token
-      parameters:
-      - description: Refresh token
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.TokenRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.TokenResponse'
-      summary: Refresh token
-      tags:
-      - authentication
-  /register:
-    post:
-      consumes:
-      - application/json
-      description: Create a new user and return JWT tokens
-      parameters:
-      - description: Register credentials
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.UserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.TokenResponse'
-      summary: User register
-      tags:
-      - authentication
   /users:
     get:
       consumes:
@@ -644,6 +817,14 @@ paths:
             items:
               $ref: '#/definitions/models.UserResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get all users
       tags:
       - users
@@ -665,6 +846,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Create a new user
       tags:
       - users
@@ -686,6 +875,8 @@ paths:
           description: Successfully deleted entry
           schema:
             type: string
+      security:
+      - BearerAuth: []
       summary: Delete a user
       tags:
       - users
@@ -706,6 +897,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get user by ID
       tags:
       - users
@@ -732,6 +931,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Update a user
       tags:
       - users
@@ -755,6 +962,14 @@ paths:
             items:
               $ref: '#/definitions/models.GroupResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get groups for a user
       tags:
       - users
@@ -778,6 +993,14 @@ paths:
             items:
               $ref: '#/definitions/models.LocationResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
       summary: Get locations for a user
       tags:
       - users

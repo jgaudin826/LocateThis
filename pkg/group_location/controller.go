@@ -26,6 +26,8 @@ func New(configuration *config.Config) *GroupLocationConfig {
 // @Produce		json
 // @Param			request	body		models.GroupLocationRequest	true	"Group ID, Location ID and visibility"
 // @Success		200		{object}	map[string]string
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-location [post]
 func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupLocationRequest{}
@@ -50,6 +52,8 @@ func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWri
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupLocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-location [get]
 func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWriter, r *http.Request) {
 	groupLocations, err := config.GroupLocationEntryRepository.FindAll()
@@ -79,6 +83,8 @@ func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWri
 // @Param			locationID	path		int							true	"Location ID"
 // @Param			request		body		models.GroupLocationRequest	true	"Updated visibility settings"
 // @Success		200			{object}	map[string]string
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-location/{id}/locations/{locationID} [put]
 func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -121,6 +127,8 @@ func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWrit
 // @Param			id			path		int	true	"Group ID"
 // @Param			locationID	path		int	true	"Location ID"
 // @Success		200			{string}	string	"Successfully removed location from group"
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-location/{id}/locations/{locationID} [delete]
 func (config *GroupLocationConfig) DeleteLocationFromGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))

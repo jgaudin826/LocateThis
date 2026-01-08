@@ -26,6 +26,8 @@ func New(configuration *config.Config) *GroupUserConfig {
 // @Produce		json
 // @Param			request	body		models.GroupUserRequest	true	"Group ID and User ID"
 // @Success		200		{object}	map[string]string
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-user [post]
 func (config *GroupUserConfig) PostUserToGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupUserRequest{}
@@ -50,6 +52,8 @@ func (config *GroupUserConfig) PostUserToGroupHandler(w http.ResponseWriter, r *
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupUserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-user [get]
 func (config *GroupUserConfig) GetAllGroupUserHandler(w http.ResponseWriter, r *http.Request) {
 	groupUsers, err := config.GroupUserEntryRepository.FindAll()
@@ -77,6 +81,8 @@ func (config *GroupUserConfig) GetAllGroupUserHandler(w http.ResponseWriter, r *
 // @Param			id		path		int	true	"Group ID"
 // @Param			userID	path		int	true	"User ID"
 // @Success		200		{string}	string	"Successfully removed user from group"
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/group-user/{id}/users/{userID} [delete]
 func (config *GroupUserConfig) DeleteUserFromGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))

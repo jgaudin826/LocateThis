@@ -28,6 +28,8 @@ func New(configuration *config.Config) *UserConfig {
 // @Produce		json
 // @Param			request	body		models.UserRequest	true	"User data"
 // @Success		200		{object}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users [post]
 func (config *UserConfig) PostUserHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.UserRequest{}
@@ -56,6 +58,8 @@ func (config *UserConfig) PostUserHandler(w http.ResponseWriter, r *http.Request
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users [get]
 func (config *UserConfig) GetAllUserHandler(w http.ResponseWriter, r *http.Request) {
 	entries, err := config.UserEntryRepository.FindAll()
@@ -102,6 +106,8 @@ func (config *UserConfig) GetUserByIDHandler(w http.ResponseWriter, r *http.Requ
 // @Produce		json
 // @Param			id	path		int	true	"User ID"
 // @Success		200	{object}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users/{id} [get]
 func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.Request) {
 	email := chi.URLParam(r, "email")
@@ -134,6 +140,8 @@ func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *htt
 // @Produce		json
 // @Param			id	path		int	true	"User ID"
 // @Success		200	{array}	models.LocationResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users/{id}/locations [get]
 func (config *UserConfig) GetLocationsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -159,6 +167,8 @@ func (config *UserConfig) GetLocationsForUserHandler(w http.ResponseWriter, r *h
 // @Produce		json
 // @Param			id	path		int	true	"User ID"
 // @Success		200	{array}	models.GroupResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users/{id}/groups [get]
 func (config *UserConfig) GetGroupsForUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -185,6 +195,8 @@ func (config *UserConfig) GetGroupsForUserHandler(w http.ResponseWriter, r *http
 // @Param			id		path		int					true	"User ID"
 // @Param			request	body		models.UserRequest	true	"Updated user data"
 // @Success		200		{object}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
 // @Router			/users/{id} [put]
 func (config *UserConfig) PutUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -221,6 +233,7 @@ func (config *UserConfig) PutUserHandler(w http.ResponseWriter, r *http.Request)
 // @Produce		json
 // @Param			id	path		int		true	"User ID"
 // @Success		200	{string}	string	"Successfully deleted entry"
+// @Security BearerAuth
 // @Router			/users/{id} [delete]
 func (config *UserConfig) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
