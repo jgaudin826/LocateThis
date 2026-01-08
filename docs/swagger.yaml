@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /api
 definitions:
   models.GroupLocationRequest:
     properties:
@@ -120,6 +120,171 @@ info:
   title: LocateThis API
   version: "1.0"
 paths:
+  /group-location:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all group-location associations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GroupLocationResponse'
+            type: array
+      summary: Get all group-location associations
+      tags:
+      - group-location
+    post:
+      consumes:
+      - application/json
+      description: Share a location in a group
+      parameters:
+      - description: Group ID, Location ID and visibility
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.GroupLocationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add location to group
+      tags:
+      - group-location
+  /group-location/{id}/locations/{locationID}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a location from a group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Location ID
+        in: path
+        name: locationID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully removed location from group
+          schema:
+            type: string
+      summary: Delete location from group
+      tags:
+      - group-location
+    put:
+      consumes:
+      - application/json
+      description: Update location visibility settings in a group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Location ID
+        in: path
+        name: locationID
+        required: true
+        type: integer
+      - description: Updated visibility settings
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.GroupLocationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update location visibility in group
+      tags:
+      - group-location
+  /group-user:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all group-user associations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GroupUserResponse'
+            type: array
+      summary: Get all group-user associations
+      tags:
+      - group-user
+    post:
+      consumes:
+      - application/json
+      description: Add a user to a group
+      parameters:
+      - description: Group ID and User ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.GroupUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add user to group
+      tags:
+      - group-user
+  /group-user/{id}/users/{userID}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a user from a group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully removed user from group
+          schema:
+            type: string
+      summary: Delete user from group
+      tags:
+      - group-user
   /groups:
     get:
       consumes:
@@ -248,65 +413,6 @@ paths:
       summary: Get locations for a group
       tags:
       - groups
-  /groups/{id}/locations/{locationID}:
-    delete:
-      consumes:
-      - application/json
-      description: Remove a location from a group
-      parameters:
-      - description: Group ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Location ID
-        in: path
-        name: locationID
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully removed location from group
-          schema:
-            type: string
-      summary: Delete location from group
-      tags:
-      - groups
-    put:
-      consumes:
-      - application/json
-      description: Update location visibility settings in a group
-      parameters:
-      - description: Group ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Location ID
-        in: path
-        name: locationID
-        required: true
-        type: integer
-      - description: Updated visibility settings
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.GroupLocationRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Update location visibility in group
-      tags:
-      - groups
   /groups/{id}/users:
     get:
       consumes:
@@ -328,112 +434,6 @@ paths:
               $ref: '#/definitions/models.UserResponse'
             type: array
       summary: Get users for a group
-      tags:
-      - groups
-  /groups/{id}/users/{userID}:
-    delete:
-      consumes:
-      - application/json
-      description: Remove a user from a group
-      parameters:
-      - description: Group ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully removed user from group
-          schema:
-            type: string
-      summary: Delete user from group
-      tags:
-      - groups
-  /groups/locations:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all group-location associations
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupLocationResponse'
-            type: array
-      summary: Get all group-location associations
-      tags:
-      - groups
-    post:
-      consumes:
-      - application/json
-      description: Share a location in a group
-      parameters:
-      - description: Group ID, Location ID and visibility
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.GroupLocationRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Add location to group
-      tags:
-      - groups
-  /groups/users:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all group-user associations
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupUserResponse'
-            type: array
-      summary: Get all group-user associations
-      tags:
-      - groups
-    post:
-      consumes:
-      - application/json
-      description: Add a user to a group
-      parameters:
-      - description: Group ID and User ID
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.GroupUserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Add user to group
       tags:
       - groups
   /locations:

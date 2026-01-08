@@ -6,8 +6,8 @@ type GroupEntry struct {
 	gorm.Model
 	Name      string           `json:"name"`
 	Admin     UserEntry        `json:"admin_id" gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;"`
-	Users     []*UserEntry     `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"users"`
-	Locations []*LocationEntry `gorm:"many2many:group_locations;" json:"locations"`
+	Users     []*UserEntry     `gorm:"many2many:group_users;foreignKey:ID;joinForeignKey:GroupID;References:ID;joinReferences:UserID;constraint:OnDelete:CASCADE;" json:"users"`
+	Locations []*LocationEntry `gorm:"many2many:group_locations;foreignKey:ID;joinForeignKey:GroupID;References:ID;joinReferences:LocationID;constraint:OnDelete:CASCADE;" json:"locations"`
 }
 
 type GroupRepository interface {

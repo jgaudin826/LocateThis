@@ -21,7 +21,7 @@ import (
 // @version			1.0
 // @description		API for managing groups, users, locations, and authentication
 // @host			localhost:8080
-// @BasePath		/api/v1
+// @BasePath		/api
 // @securityDefinitions.apikey	BearerAuth
 // @in				header
 // @name			Authorization
@@ -29,15 +29,15 @@ func Routes(configuration *config.Config) *chi.Mux {
 	router := chi.NewRouter()
 	router.Get("/swagger/*", httpSwagger.WrapHandler)
 
-	router.Mount("/api/v1/auth", authentication.Routes(configuration))
+	router.Mount("/api/auth", authentication.Routes(configuration))
 
 	router.Group(func(r chi.Router) {
 		r.Use(authentication.AuthMiddleware("demo_key"))
-		r.Mount("/api", group.Routes(configuration))
-		r.Mount("/api", group_location.Routes(configuration))
-		r.Mount("/api", group_user.Routes(configuration))
-		r.Mount("/api", location.Routes(configuration))
-		r.Mount("/api", user.Routes(configuration))
+		r.Mount("/api/groups", group.Routes(configuration))
+		r.Mount("/api/group-location", group_location.Routes(configuration))
+		r.Mount("/api/group-user", group_user.Routes(configuration))
+		r.Mount("/api/locations", location.Routes(configuration))
+		r.Mount("/api/users", user.Routes(configuration))
 	})
 
 	return router

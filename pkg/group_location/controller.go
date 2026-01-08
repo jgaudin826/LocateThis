@@ -21,12 +21,12 @@ func New(configuration *config.Config) *GroupLocationConfig {
 
 // @Summary		Add location to group
 // @Description	Share a location in a group
-// @Tags			groups
+// @Tags			group-location
 // @Accept			json
 // @Produce		json
 // @Param			request	body		models.GroupLocationRequest	true	"Group ID, Location ID and visibility"
 // @Success		200		{object}	map[string]string
-// @Router			/groups/locations [post]
+// @Router			/group-location [post]
 func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWriter, r *http.Request) {
 	req := &models.GroupLocationRequest{}
 	if err := render.Bind(r, req); err != nil {
@@ -46,11 +46,11 @@ func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWri
 
 // @Summary		Get all group-location associations
 // @Description	Retrieve all group-location associations
-// @Tags			groups
+// @Tags			group-location
 // @Accept			json
 // @Produce		json
 // @Success		200	{array}	models.GroupLocationResponse
-// @Router			/groups/locations [get]
+// @Router			/group-location [get]
 func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWriter, r *http.Request) {
 	groupLocations, err := config.GroupLocationEntryRepository.FindAll()
 	if err != nil {
@@ -72,14 +72,14 @@ func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWri
 
 // @Summary		Update location visibility in group
 // @Description	Update location visibility settings in a group
-// @Tags			groups
+// @Tags			group-location
 // @Accept			json
 // @Produce		json
 // @Param			id			path		int							true	"Group ID"
 // @Param			locationID	path		int							true	"Location ID"
 // @Param			request		body		models.GroupLocationRequest	true	"Updated visibility settings"
 // @Success		200			{object}	map[string]string
-// @Router			/groups/{id}/locations/{locationID} [put]
+// @Router			/group-location/{id}/locations/{locationID} [put]
 func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -115,13 +115,13 @@ func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWrit
 
 // @Summary		Delete location from group
 // @Description	Remove a location from a group
-// @Tags			groups
+// @Tags			group-location
 // @Accept			json
 // @Produce		json
 // @Param			id			path		int	true	"Group ID"
 // @Param			locationID	path		int	true	"Location ID"
 // @Success		200			{string}	string	"Successfully removed location from group"
-// @Router			/groups/{id}/locations/{locationID} [delete]
+// @Router			/group-location/{id}/locations/{locationID} [delete]
 func (config *GroupLocationConfig) DeleteLocationFromGroupHandler(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

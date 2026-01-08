@@ -18,11 +18,11 @@ Locations:
 func Routes(configuration *config.Config) chi.Router {
 	LocationConfig := New(configuration)
 	router := chi.NewRouter()
-	router.Post("/locations", LocationConfig.PostLocationHandler)
-	router.Get("/locations", LocationConfig.GetAllLocationHandler) // FOR DEBUG ONLY
-	router.Get("/locations/{id}", LocationConfig.GetLocationByIDHandler)
-	router.Put("/locations/{id}", LocationConfig.PutLocationHandler)
-	router.Delete("/locations/{id}", LocationConfig.DeleteLocationHandler)
-	router.Get("/locations/{id}/groups", LocationConfig.GetGroupsForLocationHandler)
+	router.Post("/", LocationConfig.PostLocationHandler)
+	router.Get("/", LocationConfig.GetAllLocationHandler) // FOR DEBUG ONLY
+	router.Get("/{id}", LocationConfig.GetLocationByIDHandler)
+	router.Put("/{id}", LocationConfig.PutLocationHandler)
+	router.Delete("/{id}", LocationConfig.DeleteLocationHandler)
+	router.Get("/{id}/groups", LocationConfig.GetGroupsForLocationHandler)
 	return router
 }
