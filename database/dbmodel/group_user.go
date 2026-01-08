@@ -7,35 +7,35 @@ type GroupUserEntry struct {
 	GroupID uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
 }
 
-type UserGroupRepository interface {
+type GroupUserRepository interface {
 	Create(entry *GroupUserEntry) (*GroupUserEntry, error)
 	FindAll() ([]GroupUserEntry, error)
 	Delete(userID, groupID uint) error
 }
 
-type userGroupRepository struct {
+type groupUserRepository struct {
 	db *gorm.DB
 }
 
-func NewUserGroupRepository(db *gorm.DB) UserGroupRepository {
-	return &userGroupRepository{db: db}
+func NewGroupUserRepository(db *gorm.DB) GroupUserRepository {
+	return &groupUserRepository{db: db}
 }
 
-func (userGroupRepository *userGroupRepository) Create(entry *GroupUserEntry) (*GroupUserEntry, error) {
-	if err := userGroupRepository.db.Create(entry).Error; err != nil {
+func (groupUserRepository *groupUserRepository) Create(entry *GroupUserEntry) (*GroupUserEntry, error) {
+	if err := groupUserRepository.db.Create(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (userGroupRepository *userGroupRepository) FindAll() ([]GroupUserEntry, error) {
+func (groupUserRepository *groupUserRepository) FindAll() ([]GroupUserEntry, error) {
 	var userGroups []GroupUserEntry
-	if err := userGroupRepository.db.Find(&userGroups).Error; err != nil {
+	if err := groupUserRepository.db.Find(&userGroups).Error; err != nil {
 		return nil, err
 	}
 	return userGroups, nil
 }
 
-func (userGroupRepository *userGroupRepository) Delete(userID, groupID uint) error {
-	return userGroupRepository.db.Where("user_id = ? AND group_id = ?", userID, groupID).Delete(&GroupUserEntry{}).Error
+func (groupUserRepository *groupUserRepository) Delete(userID, groupID uint) error {
+	return groupUserRepository.db.Where("user_id = ? AND group_id = ?", userID, groupID).Delete(&GroupUserEntry{}).Error
 }

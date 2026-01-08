@@ -8,41 +8,41 @@ type GroupLocationEntry struct {
 	IsVisibleCoordinates bool `gorm:"default:true"`
 }
 
-type LocationGroupRepository interface {
+type GroupLocationRepository interface {
 	Create(entry *GroupLocationEntry) (*GroupLocationEntry, error)
-	FindAll() (*GroupLocationEntry, error)
+	FindAll() ([]GroupLocationEntry, error)
 	Update(entry *GroupLocationEntry) (*GroupLocationEntry, error)
 	Delete(groupID, locationID uint) error
 }
-type locationGroupRepository struct {
+type groupLocationRepository struct {
 	db *gorm.DB
 }
 
-func NewLocationGroupRepository(db *gorm.DB) LocationGroupRepository {
-	return &locationGroupRepository{db: db}
+func NewGroupLocationRepository(db *gorm.DB) GroupLocationRepository {
+	return &groupLocationRepository{db: db}
 }
-func (locationGroupRepository *locationGroupRepository) Create(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
-	if err := locationGroupRepository.db.Create(entry).Error; err != nil {
+func (groupLocationRepository *groupLocationRepository) Create(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
+	if err := groupLocationRepository.db.Create(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (locationGroupRepository *locationGroupRepository) FindAll() (*GroupLocationEntry, error) {
-	var groupLocation GroupLocationEntry
-	if err := locationGroupRepository.db.First(&groupLocation).Error; err != nil {
+func (groupLocationRepository *groupLocationRepository) FindAll() ([]GroupLocationEntry, error) {
+	var groupLocations []GroupLocationEntry
+	if err := groupLocationRepository.db.Find(&groupLocations).Error; err != nil {
 		return nil, err
 	}
-	return &groupLocation, nil
+	return groupLocations, nil
 }
 
-func (locationGroupRepository *locationGroupRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
-	if err := locationGroupRepository.db.Save(entry).Error; err != nil {
+func (groupLocationRepository *groupLocationRepository) Update(entry *GroupLocationEntry) (*GroupLocationEntry, error) {
+	if err := groupLocationRepository.db.Save(entry).Error; err != nil {
 		return nil, err
 	}
 	return entry, nil
 }
 
-func (locationGroupRepository *locationGroupRepository) Delete(groupID, locationID uint) error {
-	return locationGroupRepository.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocationEntry{}).Error
+func (groupLocationRepository *groupLocationRepository) Delete(groupID, locationID uint) error {
+	return groupLocationRepository.db.Where("group_id = ? AND location_id = ?", groupID, locationID).Delete(&GroupLocationEntry{}).Error
 }

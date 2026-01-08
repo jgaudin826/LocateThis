@@ -3,7 +3,9 @@ package main
 import (
 	"locate-this/config"
 	"locate-this/pkg/authentication"
-	"locate-this/pkg/groups"
+	"locate-this/pkg/group"
+	"locate-this/pkg/group_location"
+	"locate-this/pkg/group_user"
 	"locate-this/pkg/location"
 	"locate-this/pkg/user"
 	"log"
@@ -18,7 +20,9 @@ func Routes(configuration *config.Config) *chi.Mux {
 	// Routeurs
 	router.Group(func(r chi.Router) {
 		r.Use(authentication.AuthMiddleware("demo_key"))
-		r.Mount("/api", groups.Routes(configuration))
+		r.Mount("/api", group.Routes(configuration))
+		r.Mount("/api", group_location.Routes(configuration))
+		r.Mount("/api", group_user.Routes(configuration))
 		r.Mount("/api", location.Routes(configuration))
 		r.Mount("/api", user.Routes(configuration))
 	})
