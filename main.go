@@ -12,11 +12,21 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// @title Clinic API
+// @version 1.0
+// @description API for managing groups, users, and locations
+// @host localhost:8080
+// @BasePath /api/v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func Routes(configuration *config.Config) *chi.Mux {
 	router := chi.NewRouter()
-
+	router.Get("/swagger/*", httpSwagger.WrapHandler)
+	router.Mount("/api/v1/auth", authentication.Routes(configuration))
 	// Routeurs
 	router.Group(func(r chi.Router) {
 		r.Use(authentication.AuthMiddleware("demo_key"))

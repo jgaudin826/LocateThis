@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"locate-this/config"
 	"locate-this/database/dbmodel"
-	"locate-this/pkg/authentication"
 	"locate-this/pkg/models"
 	"net/http"
 	"strconv"
@@ -222,74 +221,4 @@ func (config *UserConfig) DeleteUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	render.JSON(w, r, "Succefully deleted entry")
-}
-
-// @Summary		User login
-// @Description	Authenticate user and return JWT token
-// @Tags			authentication
-// @Accept			json
-// @Produce		json
-// @Param			request	body		models.LoginRequest	true	"Login credentials"
-// @Success		200		{object}	models.TokenResponse
-// @Router			/login [post]
-
-func (config *UserConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
-	req := &models.LoginRequest{}
-	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
-		return
-	}
-
-	user, err := config.UserEntryRepository.FindByEmail(req.Email)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid email or password"})
-		return
-	}
-
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)) != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid email or password"})
-		return
-	}
-
-	token, err := authentication.GenerateToken(config.SecretJWT, req.Email)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-		return
-	}
-
-	render.JSON(w, r, models.TokenResponse{Token: token})
-}
-
-// @Summary		Refresh token
-// @Description	Generate a new JWT token from an existing valid token
-// @Tags			authentication
-// @Accept			json
-// @Produce		json
-// @Security		Bearer
-// @Success		200	{object}	models.TokenResponse
-// @Router			/refresh [post]
-func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request) {
-	id := authentication.GetUserFromContext(r.Context())
-
-	// verifiaction que l'email n'est pas deja utilisé
-	user, err := config.UserEntryRepository.FindByEmail(id)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "error there is no user with this email"})
-		return
-	}
-
-	token, err := authentication.GenerateToken(config.SecretJWT, strconv.Itoa(int(user.ID)))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-		return
-	}
-
-	refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, strconv.Itoa(int(user.ID)))
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
-		return
-	}
-
-	render.JSON(w, r, map[string]string{"token": token, "refresh_token": refrsehToken})
-	return
 }
