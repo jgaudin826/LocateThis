@@ -251,7 +251,7 @@ func (config *UserConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := GenerateToken(config.SecretJWT, req.Email)
+	token, err := authentication.GenerateToken(config.SecretJWT, req.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
@@ -272,19 +272,19 @@ func (config *UserConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 	id := authentication.GetUserFromContext(r.Context())
 
 	// verifiaction que l'email n'est pas deja utilisé
-	user, err := config.UserRepository.FindByEmail(id)
+	user, err := config.UserEntryRepository.FindByEmail(id)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "error there is no user with this email"})
 		return
 	}
 
-	token, err := authentication.GenerateToken(config.SecretJWT, user.id)
+	token, err := authentication.GenerateToken(config.SecretJWT, strconv.Itoa(int(user.ID)))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
 	}
 
-	refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, user.id)
+	refrsehToken, err := authentication.GenerateRefreshToken(config.SecretRefreshJWT, strconv.Itoa(int(user.ID)))
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
