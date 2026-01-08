@@ -49,7 +49,7 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
@@ -60,12 +60,12 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Tokens := &models.TokenResponse{
-		Token:        token,
+	tokens := &models.TokenResponse{
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
 
-	render.JSON(w, r, Tokens)
+	render.JSON(w, r, tokens)
 }
 
 // @Summary		User register
@@ -94,7 +94,7 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 	}
 	user := &models.UserResponse{ID: res.ID, Email: res.Email, Username: res.Username}
 
-	token, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
@@ -104,10 +104,12 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 		render.JSON(w, r, map[string]string{"error": "Failed to generate refresh token"})
 		return
 	}
-	render.JSON(w, r, models.TokenResponse{
-		Token:        token,
+	tokens := &models.TokenResponse{
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-	})
+	}
+
+	render.JSON(w, r, tokens)
 }
 
 // @Summary		Refresh token
@@ -140,7 +142,7 @@ func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 		render.JSON(w, r, map[string]string{"error": "User not found"})
 		return
 	}
-	token, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
@@ -151,10 +153,10 @@ func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	Tokens := &models.TokenResponse{
-		Token:        token,
+	tokens := &models.TokenResponse{
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
 
-	render.JSON(w, r, Tokens)
+	render.JSON(w, r, tokens)
 }
