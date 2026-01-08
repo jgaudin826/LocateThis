@@ -3,6 +3,7 @@ package authentication
 import (
 	"encoding/json"
 	"locate-this/config"
+	"locate-this/database/dbmodel"
 	"locate-this/pkg/models"
 	"net/http"
 
@@ -65,6 +66,48 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, Tokens)
+}
+
+// @Summary		User register
+// @Description	Create a new user and return JWT tokens
+// @Tags			authentication
+// @Accept			json
+// @Produce		json
+// @Param			request	body		models.UserRequest	true	"Register credentials"
+// @Success		200		{object}	models.TokenResponse
+// @Router			/register [post]
+func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	req := &models.UserRequest{}
+	if err := render.Bind(r, req); err != nil {
+		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
+		return
+	}
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	req.Password = string(hashedPassword)
+
+	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Username: req.Username}
+	res, err := config.UserEntryRepository.Create(userEntry)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to create user"})
+		return
+	}
+	user := &models.UserResponse{ID: res.ID, Email: res.Email, Username: res.Username}
+
+	token, err := GenerateToken(config.SecretJWT, user.Email)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
+		return
+	}
+	refreshToken, err := GenerateRefreshToken(config.SecretRefreshJWT, user.Email)
+	if err != nil {
+		render.JSON(w, r, map[string]string{"error": "Failed to generate refresh token"})
+		return
+	}
+	render.JSON(w, r, models.TokenResponse{
+		Token:        token,
+		RefreshToken: refreshToken,
+	})
 }
 
 // @Summary		Refresh token
