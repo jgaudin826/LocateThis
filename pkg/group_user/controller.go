@@ -36,7 +36,7 @@ func (config *GroupUserConfig) PostUserToGroupHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	groupUserEntry := &dbmodel.GroupUserEntry{GroupID: req.GroupID, UserID: req.UserID}
+	groupUserEntry := &dbmodel.GroupUserEntry{GroupEntryID: req.GroupID, UserEntryID: req.UserID}
 	_, err := config.GroupUserEntryRepository.Create(groupUserEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to add user to group"})
@@ -65,8 +65,8 @@ func (config *GroupUserConfig) GetAllGroupUserHandler(w http.ResponseWriter, r *
 	groupUserResponse := make([]models.GroupUserResponse, 0)
 	for _, gu := range groupUsers {
 		groupUserResponse = append(groupUserResponse, models.GroupUserResponse{
-			UserID:  gu.UserID,
-			GroupID: gu.GroupID,
+			UserID:  gu.UserEntryID,
+			GroupID: gu.GroupEntryID,
 		})
 	}
 

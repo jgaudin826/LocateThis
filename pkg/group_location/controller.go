@@ -36,7 +36,7 @@ func (config *GroupLocationConfig) PostLocationToGroupHandler(w http.ResponseWri
 		return
 	}
 
-	groupLocationEntry := &dbmodel.GroupLocationEntry{GroupID: req.GroupID, LocationID: req.LocationID, IsVisibleCoordinates: req.IsVisibleCoordinates}
+	groupLocationEntry := &dbmodel.GroupLocationEntry{GroupEntryID: req.GroupID, LocationEntryID: req.LocationID, IsVisibleCoordinates: req.IsVisibleCoordinates}
 	_, err := config.GroupLocationEntryRepository.Create(groupLocationEntry)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to share location in group"})
@@ -65,8 +65,8 @@ func (config *GroupLocationConfig) GetAllGroupLocationHandler(w http.ResponseWri
 	groupLocationResponse := make([]models.GroupLocationResponse, 0)
 	for _, gl := range groupLocations {
 		groupLocationResponse = append(groupLocationResponse, models.GroupLocationResponse{
-			GroupID:              gl.GroupID,
-			LocationID:           gl.LocationID,
+			GroupID:              gl.GroupEntryID,
+			LocationID:           gl.LocationEntryID,
 			IsVisibleCoordinates: gl.IsVisibleCoordinates,
 		})
 	}
@@ -106,8 +106,8 @@ func (config *GroupLocationConfig) PutLocationInGroupHandler(w http.ResponseWrit
 	}
 
 	groupLocationEntry := &dbmodel.GroupLocationEntry{
-		GroupID:              uint(groupID),
-		LocationID:           uint(locationID),
+		GroupEntryID:         uint(groupID),
+		LocationEntryID:      uint(locationID),
 		IsVisibleCoordinates: req.IsVisibleCoordinates,
 	}
 	_, err = config.GroupLocationEntryRepository.Update(groupLocationEntry)

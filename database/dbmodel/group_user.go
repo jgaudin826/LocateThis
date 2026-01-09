@@ -3,8 +3,8 @@ package dbmodel
 import "gorm.io/gorm"
 
 type GroupUserEntry struct {
-	UserID  uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
-	GroupID uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
+	UserEntryID  uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
+	GroupEntryID uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
 }
 
 type GroupUserRepository interface {
