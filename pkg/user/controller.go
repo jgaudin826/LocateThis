@@ -80,6 +80,16 @@ func (config *UserConfig) GetAllUserHandler(w http.ResponseWriter, r *http.Reque
 	render.JSON(w, r, usersResponse)
 }
 
+// @Summary		Get user by ID
+// @Description	Retrieve a user by its ID
+// @Tags			users
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"User ID"
+// @Success		200	{object}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
+// @Router			/users/{id} [get]
 func (config *UserConfig) GetUserByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -108,7 +118,7 @@ func (config *UserConfig) GetUserByIDHandler(w http.ResponseWriter, r *http.Requ
 // @Success		200	{object}	models.UserResponse
 // @Failure 400 {object} map[string]string
 // @Security BearerAuth
-// @Router			/users/{id} [get]
+// @Router			/users/{email} [get]
 func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.Request) {
 	email := chi.URLParam(r, "email")
 
@@ -121,6 +131,16 @@ func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.R
 	render.JSON(w, r, userResponse)
 }
 
+// @Summary		Get user by ID
+// @Description	Retrieve a user by its ID
+// @Tags			users
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"User ID"
+// @Success		200	{object}	models.UserResponse
+// @Failure 400 {object} map[string]string
+// @Security BearerAuth
+// @Router			/users/{username} [get]
 func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
 

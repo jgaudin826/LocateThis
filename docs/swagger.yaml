@@ -857,6 +857,35 @@ paths:
       summary: Create a new user
       tags:
       - users
+  /users/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - users
   /users/{id}:
     delete:
       consumes:
@@ -1002,6 +1031,35 @@ paths:
       security:
       - BearerAuth: []
       summary: Get locations for a user
+      tags:
+      - users
+  /users/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
       tags:
       - users
 securityDefinitions:

@@ -20,7 +20,9 @@ func Routes(configuration *config.Config) chi.Router {
 	router := chi.NewRouter()
 	router.Post("/", UserConfig.PostUserHandler)
 	router.Get("/", UserConfig.GetAllUserHandler) // FOR DEBUG ONLY
-	router.Get("/{id}", UserConfig.GetUserByEmailHandler)
+	router.Get("/{id}", UserConfig.GetUserByIDHandler)
+	router.Get("/{email}", UserConfig.GetUserByEmailHandler)
+	router.Get("/{username}", UserConfig.GetUserByUsernameHandler)
 	router.Put("/{id}", UserConfig.PutUserHandler)
 	router.Delete("/{id}", UserConfig.DeleteUserHandler)
 	router.Get("/{id}/locations", UserConfig.GetLocationsForUserHandler)
