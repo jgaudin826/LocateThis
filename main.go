@@ -15,6 +15,7 @@ import (
 	_ "locate-this/docs"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -50,7 +51,7 @@ func main() {
 	if err != nil {
 		log.Panicln("Configuration error:", err)
 	}
-
+	godotenv.Load()
 	// Initialisation des routes
 	router := Routes(configuration)
 
