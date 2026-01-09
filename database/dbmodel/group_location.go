@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type GroupLocationEntry struct {
 	GroupID              uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
 	LocationID           uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
-	IsVisibleCoordinates bool `gorm:"default:true"`
+	IsVisibleCoordinates bool `gorm:"not null;default:true"`
 }
 
 type GroupLocationRepository interface {
