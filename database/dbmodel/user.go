@@ -71,7 +71,7 @@ func (userRepository *userRepository) FindByUsername(username string) (*UserEntr
 
 func (userRepository *userRepository) FindLocationsForUser(id uint) ([]LocationEntry, error) {
 	var locations []LocationEntry
-	if err := userRepository.db.Where("id_user = ?", id).Find(&locations).Error; err != nil {
+	if err := userRepository.db.Where("user_id = ?", id).Find(&locations).Error; err != nil {
 		return nil, err
 	}
 	return locations, nil
