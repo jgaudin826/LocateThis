@@ -10,6 +10,7 @@ import (
 	"locate-this/pkg/user"
 	"log"
 	"net/http"
+	"os"
 
 	_ "locate-this/docs"
 
@@ -32,7 +33,7 @@ func Routes(configuration *config.Config) *chi.Mux {
 	router.Mount("/api/auth", authentication.Routes(configuration))
 
 	router.Group(func(r chi.Router) {
-		r.Use(authentication.AuthMiddleware(configuration.SecretJWT))
+		r.Use(authentication.AuthMiddleware(os.Getenv("JWT_SECRET")))
 		r.Mount("/api/groups", group.Routes(configuration))
 		r.Mount("/api/group-location", group_location.Routes(configuration))
 		r.Mount("/api/group-user", group_user.Routes(configuration))
@@ -53,7 +54,7 @@ func main() {
 	// Initialisation des routes
 	router := Routes(configuration)
 
-	log.Println("Server running on http://localhost:8080")
-	log.Println("Swagger UI available at http://localhost:8080/swagger/index.html")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Println("Server running on http://localhost:" + os.Getenv("PORT"))
+	log.Println("Swagger UI available at http://localhost:" + os.Getenv("PORT") + "/swagger/index.html")
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), router))
 }

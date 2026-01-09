@@ -5,6 +5,7 @@ import (
 	"locate-this/database/dbmodel"
 	"locate-this/pkg/models"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/render"
 	"golang.org/x/crypto/bcrypt"
@@ -48,12 +49,12 @@ func (config *AuthConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(os.Getenv("JWT_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
 	}
-	refreshToken, err := GenerateRefreshToken(config.SecretRefreshJWT, user.Email)
+	refreshToken, err := GenerateRefreshToken(os.Getenv("REFRESH_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate refresh token"})
 		return
@@ -106,12 +107,12 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 	}
 	user := &models.UserResponse{ID: res.ID, Email: res.Email, Username: res.Username}
 
-	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(os.Getenv("JWT_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
 	}
-	refreshToken, err := GenerateRefreshToken(config.SecretRefreshJWT, user.Email)
+	refreshToken, err := GenerateRefreshToken(os.Getenv("REFRESH_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate refresh token"})
 		return
@@ -141,7 +142,7 @@ func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	email, err := ParseToken(config.SecretRefreshJWT, req.RefreshToken)
+	email, err := ParseToken(os.Getenv("REFRESH_SECRET"), req.RefreshToken)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Invalid refresh token"})
 		return
@@ -152,12 +153,12 @@ func (config *AuthConfig) RefreshHandler(w http.ResponseWriter, r *http.Request)
 		render.JSON(w, r, map[string]string{"error": "User not found"})
 		return
 	}
-	accessToken, err := GenerateToken(config.SecretJWT, user.Email)
+	accessToken, err := GenerateToken(os.Getenv("JWT_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate token"})
 		return
 	}
-	refreshToken, err := GenerateRefreshToken(config.SecretRefreshJWT, user.Email)
+	refreshToken, err := GenerateRefreshToken(os.Getenv("REFRESH_SECRET"), user.Email)
 	if err != nil {
 		render.JSON(w, r, map[string]string{"error": "Failed to generate refresh token"})
 		return

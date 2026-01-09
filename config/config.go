@@ -17,10 +17,6 @@ type Config struct {
 	LocationEntryRepository      dbmodel.LocationRepository
 	GroupLocationEntryRepository dbmodel.GroupLocationRepository
 	GroupUserEntryRepository     dbmodel.GroupUserRepository
-
-	// Constants
-	SecretJWT        string
-	SecretRefreshJWT string
 }
 
 func New() (*Config, error) {
@@ -41,9 +37,6 @@ func New() (*Config, error) {
 	config.LocationEntryRepository = dbmodel.NewLocationRepository(databaseSession)
 	config.GroupLocationEntryRepository = dbmodel.NewGroupLocationRepository(databaseSession)
 	config.GroupUserEntryRepository = dbmodel.NewGroupUserRepository(databaseSession)
-
-	config.SecretJWT = "HeXIVX"
-	config.SecretRefreshJWT = "XVIXeH"
 
 	return &config, nil
 }
