@@ -96,17 +96,17 @@ definitions:
         type: string
       password:
         type: string
-      pseudo:
+      username:
         type: string
     type: object
   models.UserResponse:
     properties:
       email:
         type: string
-      pseudo:
-        type: string
       user_id:
         type: integer
+      username:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -826,35 +826,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Get all users
-      tags:
-      - users
-    post:
-      consumes:
-      - application/json
-      description: Create a new user entry
-      parameters:
-      - description: User data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.UserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.UserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Create a new user
       tags:
       - users
   /users/{email}:
