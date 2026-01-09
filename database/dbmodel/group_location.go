@@ -3,8 +3,8 @@ package dbmodel
 import "gorm.io/gorm"
 
 type GroupLocationEntry struct {
-	GroupID              uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
-	LocationID           uint `gorm:"primaryKey;constraint:OnDelete:CASCADE"`
+	GroupID              uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
+	LocationID           uint `gorm:"not null;primaryKey;constraint:OnDelete:CASCADE"`
 	IsVisibleCoordinates bool `gorm:"default:true"`
 }
 

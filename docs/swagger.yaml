@@ -828,35 +828,6 @@ paths:
       summary: Get all users
       tags:
       - users
-  /users/{email}:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve a user by its ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.UserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Get user by ID
-      tags:
-      - users
   /users/{id}:
     delete:
       consumes:
@@ -1004,17 +975,17 @@ paths:
       summary: Get locations for a user
       tags:
       - users
-  /users/{username}:
+  /users/email/{email}:
     get:
       consumes:
       - application/json
-      description: Retrieve a user by its ID
+      description: Retrieve a user by its email
       parameters:
-      - description: User ID
+      - description: User email
         in: path
-        name: id
+        name: email
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -1030,7 +1001,36 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Get user by ID
+      summary: Get user by email
+      tags:
+      - users
+  /users/username/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by its username
+      parameters:
+      - description: User username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by username
       tags:
       - users
 securityDefinitions:

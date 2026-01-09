@@ -4,9 +4,9 @@ import "gorm.io/gorm"
 
 type UserEntry struct {
 	gorm.Model
-	Email    string        `json:"email"`
-	Password string        `json:"password"`
-	Username string        `json:"username"`
+	Email    string        `json:"email" gorm:"not null;unique"`
+	Password string        `json:"password" gorm:"not null"`
+	Username string        `json:"username" gorm:"not null;unique"`
 	Groups   []*GroupEntry `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"groups"`
 }
 

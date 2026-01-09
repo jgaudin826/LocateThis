@@ -77,16 +77,16 @@ func (config *UserConfig) GetUserByIDHandler(w http.ResponseWriter, r *http.Requ
 	render.JSON(w, r, userResponse)
 }
 
-// @Summary		Get user by ID
-// @Description	Retrieve a user by its ID
+// @Summary		Get user by email
+// @Description	Retrieve a user by its email
 // @Tags			users
 // @Accept			json
 // @Produce		json
-// @Param			id	path		int	true	"User ID"
+// @Param			email	path		string	true	"User email"
 // @Success		200	{object}	models.UserResponse
 // @Failure 400 {object} map[string]string
 // @Security BearerAuth
-// @Router			/users/{email} [get]
+// @Router			/users/email/{email} [get]
 func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.Request) {
 	email := chi.URLParam(r, "email")
 
@@ -99,16 +99,16 @@ func (config *UserConfig) GetUserByEmailHandler(w http.ResponseWriter, r *http.R
 	render.JSON(w, r, userResponse)
 }
 
-// @Summary		Get user by ID
-// @Description	Retrieve a user by its ID
+// @Summary		Get user by username
+// @Description	Retrieve a user by its username
 // @Tags			users
 // @Accept			json
 // @Produce		json
-// @Param			id	path		int	true	"User ID"
+// @Param			username	path		string	true	"User username"
 // @Success		200	{object}	models.UserResponse
 // @Failure 400 {object} map[string]string
 // @Security BearerAuth
-// @Router			/users/{username} [get]
+// @Router			/users/username/{username} [get]
 func (config *UserConfig) GetUserByUsernameHandler(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
 
