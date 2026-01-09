@@ -107,7 +107,7 @@ func (config *GroupConfig) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 
 	var locations []models.LocationResponse
 	for _, location := range entry.Locations {
-		locations = append(locations, models.LocationResponse{ID: location.ID, Name: location.Name, Latitude: location.Latitude, Longitude: location.Longitude, UserID: strconv.Itoa(int(location.User.ID))})
+		locations = append(locations, models.LocationResponse{ID: location.ID, Name: location.Name, Latitude: location.Latitude, Longitude: location.Longitude, UserID: location.User.ID})
 	}
 
 	groupResponse := &models.GroupResponse{ID: entry.ID, Name: entry.Name, Users: users, Locations: locations}

@@ -9,7 +9,7 @@ type LocationRequest struct {
 	Name      string  `json:"name"`
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
-	UserID    string  `json:"user_id"`
+	UserID    uint    `json:"user_id"`
 }
 
 func (a *LocationRequest) Bind(r *http.Request) error {
@@ -24,5 +24,5 @@ type LocationResponse struct {
 	Name      string  `json:"name"`
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
-	UserID    string  `json:"user_id"`
+	UserID    uint    `json:"user_id"`
 }
