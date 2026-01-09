@@ -7,7 +7,7 @@ type UserEntry struct {
 	Email    string        `json:"email" gorm:"not null;unique"`
 	Password string        `json:"password" gorm:"not null"`
 	Username string        `json:"username" gorm:"not null;unique"`
-	Groups   []*GroupEntry `gorm:"many2many:group_users;constraint:OnDelete:CASCADE;" json:"groups"`
+	Groups   []*GroupEntry `gorm:"many2many:group_user_entries;constraint:OnDelete:CASCADE;" json:"groups"`
 }
 
 type UserRepository interface {

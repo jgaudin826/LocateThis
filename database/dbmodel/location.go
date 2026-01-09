@@ -9,7 +9,7 @@ type LocationEntry struct {
 	Latitude  float64       `json:"latitude" gorm:"not null"`
 	Longitude float64       `json:"longitude" gorm:"not null"`
 	Name      string        `json:"name" gorm:"not null"`
-	Groups    []*GroupEntry `gorm:"many2many:group_locations;constraint:OnDelete:CASCADE;" json:"groups"`
+	Groups    []*GroupEntry `gorm:"many2many:group_location_entries;constraint:OnDelete:CASCADE;" json:"groups"`
 }
 
 type LocationRepository interface {
