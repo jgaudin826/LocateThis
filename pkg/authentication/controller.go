@@ -86,11 +86,13 @@ func (config *AuthConfig) RegisterHandler(w http.ResponseWriter, r *http.Request
 
 	_, err := config.UserEntryRepository.FindByEmail(req.Email)
 	if err == nil {
-		_, err = config.UserEntryRepository.FindByUsername(req.Username)
-		if err == nil {
-			render.JSON(w, r, map[string]string{"error": " email or pseudo already in use"})
-			return
-		}
+		render.JSON(w, r, map[string]string{"error": " email or pseudo already in use"})
+		return
+	}
+	_, err = config.UserEntryRepository.FindByUsername(req.Username)
+	if err == nil {
+		render.JSON(w, r, map[string]string{"error": " email or pseudo already in use"})
+		return
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
