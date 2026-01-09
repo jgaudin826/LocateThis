@@ -18,7 +18,6 @@ Users:
 func Routes(configuration *config.Config) chi.Router {
 	UserConfig := New(configuration)
 	router := chi.NewRouter()
-	router.Post("/", UserConfig.PostUserHandler)
 	router.Get("/", UserConfig.GetAllUserHandler) // FOR DEBUG ONLY
 	router.Get("/{id}", UserConfig.GetUserByIDHandler)
 	router.Get("/{email}", UserConfig.GetUserByEmailHandler)

@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserConfig struct {
@@ -19,37 +18,6 @@ type UserConfig struct {
 
 func New(configuration *config.Config) *UserConfig {
 	return &UserConfig{configuration}
-}
-
-// @Summary		Create a new user
-// @Description	Create a new user entry
-// @Tags			users
-// @Accept			json
-// @Produce		json
-// @Param			request	body		models.UserRequest	true	"User data"
-// @Success		200		{object}	models.UserResponse
-// @Failure 400 {object} map[string]string
-// @Security BearerAuth
-// @Router			/users [post]
-func (config *UserConfig) PostUserHandler(w http.ResponseWriter, r *http.Request) {
-	req := &models.UserRequest{}
-	if err := render.Bind(r, req); err != nil {
-		render.JSON(w, r, map[string]string{"error": "Invalid request payload"})
-		return
-	}
-
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	req.Password = string(hashedPassword)
-
-	userEntry := &dbmodel.UserEntry{Email: req.Email, Password: req.Password, Username: req.Username}
-	res, err := config.UserEntryRepository.Create(userEntry)
-	if err != nil {
-		render.JSON(w, r, map[string]string{"error": "Failed to create user"})
-		return
-	}
-
-	userResponse := &models.UserResponse{ID: res.ID, Email: res.Email, Username: res.Username}
-	render.JSON(w, r, userResponse)
 }
 
 // @Summary		Get all users
