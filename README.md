@@ -2,7 +2,7 @@
 
 A location-based API built with Go, featuring JWT authentication and Swagger documentation.
 
-**Contributors:** Jeremy, Cassian, Kylian, and Godwin
+**Contributors:** Jeremy, Cassian, Kelyan, and Godwin
 
 ---
 
@@ -10,8 +10,8 @@ A location-based API built with Go, featuring JWT authentication and Swagger doc
 
 ### Prerequisites
 
-- Latest version of Go installed on your system
-- Bruno or Postman for API testing (we recommend Bruno)
+- Latest version of Go (starting by the 1.24 version) installed on your system
+- Bruno or Postman for API testing (we recommend Bruno because you can test the links without connection)
 
 ### Installation
 
@@ -27,6 +27,8 @@ PORT=8080
 JWT_SECRET=YourSecureSecretHere
 REFRESH_SECRET=YourSecureRefreshSecretHere
 ```
+
+💡 **Note:** You can choose any available port. We use 8080 by default.
 
 ⚠️ **Security Note:** Choose strong, unique secrets for production environments.
 
