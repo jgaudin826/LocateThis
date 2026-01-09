@@ -1,0 +1,16 @@
+meta {
+  name: Groups for User
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/api/users/1/groups
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

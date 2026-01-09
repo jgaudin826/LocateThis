@@ -1,0 +1,24 @@
+meta {
+  name: Update
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/api/group-location/1/locations/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "group_id": 1,
+    "location_id": 4,
+    "is_visible_coordinates": false
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

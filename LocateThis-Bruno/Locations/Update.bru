@@ -1,0 +1,25 @@
+meta {
+  name: Update
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:8080/api/locations/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "latitude": 0,
+    "longitude": 0,
+    "name": "North Pole",
+    "user_id": "2"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

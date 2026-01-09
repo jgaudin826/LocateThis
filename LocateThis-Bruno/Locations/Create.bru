@@ -1,0 +1,25 @@
+meta {
+  name: Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/locations/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "latitude": 0,
+    "longitude": 0,
+    "name": "Pole Nord",
+    "user_id": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

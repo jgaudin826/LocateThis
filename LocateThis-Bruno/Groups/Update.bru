@@ -1,0 +1,22 @@
+meta {
+  name: Update
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/api/groups/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Groupe1"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

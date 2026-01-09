@@ -1,0 +1,22 @@
+meta {
+  name: Create
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/api/groups/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Groupe 1"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
